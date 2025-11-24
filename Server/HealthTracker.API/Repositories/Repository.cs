@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using HealthTracker.Core.Interfaces;
-using HealthTracker.Infrastructure.Data;
+using HealthTracker.API.Repositories;
+using HealthTracker.API.Data;
 
-namespace HealthTracker.Infrastructure.Repositories;
+namespace HealthTracker.API.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class
 {

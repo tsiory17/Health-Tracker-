@@ -1,4 +1,4 @@
-namespace HealthTracker.Core.Entities;
+namespace HealthTracker.API.Models;
 
 public class User
 {

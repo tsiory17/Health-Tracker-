@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace HealthTracker.Core.Interfaces;
+namespace HealthTracker.API.Repositories;
 
 public interface IRepository<T> where T : class
 {

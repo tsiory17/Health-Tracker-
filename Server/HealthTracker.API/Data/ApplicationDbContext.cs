@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using HealthTracker.Core.Entities;
+using HealthTracker.API.Models;
 
-namespace HealthTracker.Infrastructure.Data;
+namespace HealthTracker.API.Data;
 
 public class ApplicationDbContext : DbContext
 {

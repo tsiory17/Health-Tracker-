@@ -137,10 +137,15 @@ health-tracker-ui/
    }
    ```
 
-3. **Run database migrations**
+3. **Create and run database migrations**
    ```bash
    cd HealthTracker.API
-   dotnet ef database update
+
+   # Create initial migration (DbContext is in Infrastructure project)
+   dotnet ef migrations add InitialCreate --project ../HealthTracker.Infrastructure
+
+   # Apply migration to database
+   dotnet ef database update --project ../HealthTracker.Infrastructure
    ```
 
 4. **Run the API**

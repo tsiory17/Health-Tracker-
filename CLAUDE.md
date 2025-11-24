@@ -34,11 +34,11 @@ dotnet run
 # Run tests
 dotnet test
 
-# Apply migrations
-dotnet ef database update
+# Create new migration (DbContext is in Infrastructure project)
+dotnet ef migrations add <MigrationName> --project ../HealthTracker.Infrastructure
 
-# Create new migration
-dotnet ef migrations add <MigrationName>
+# Apply migrations to database
+dotnet ef database update --project ../HealthTracker.Infrastructure
 ```
 
 ### Frontend (Angular)
