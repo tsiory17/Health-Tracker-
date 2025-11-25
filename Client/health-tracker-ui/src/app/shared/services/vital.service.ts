@@ -7,7 +7,7 @@ import { Vital } from '../models/vital.model';
   providedIn: 'root'
 })
 export class VitalService {
-  private apiUrl = 'http://localhost:5000/api/vitals';
+  private apiUrl = 'http://localhost:5114/api/vitals';
 
   constructor(private http: HttpClient) {}
 

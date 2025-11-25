@@ -7,7 +7,7 @@ import { Medication, MedicationDose } from '../models/medication.model';
   providedIn: 'root'
 })
 export class MedicationService {
-  private apiUrl = 'http://localhost:5000/api/medications';
+  private apiUrl = 'http://localhost:5114/api/medications';
 
   constructor(private http: HttpClient) {}
 
