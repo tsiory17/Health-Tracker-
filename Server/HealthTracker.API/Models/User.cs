@@ -11,4 +11,5 @@ public class User
     // Navigation properties
     public ICollection<Medication> Medications { get; set; } = new List<Medication>();
     public ICollection<Vital> Vitals { get; set; } = new List<Vital>();
+    public ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
 }

@@ -13,6 +13,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Medication> Medications { get; set; }
     public DbSet<MedicationDose> MedicationDoses { get; set; }
     public DbSet<Vital> Vitals { get; set; }
+    public DbSet<Prescription> Prescriptions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -61,6 +62,19 @@ public class ApplicationDbContext : DbContext
 
             entity.HasOne(e => e.User)
                 .WithMany(u => u.Vitals)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Prescription configuration
+        modelBuilder.Entity<Prescription>(entity =>
+        {
+            entity.HasKey(e => e.PrescriptionId);
+            entity.Property(e => e.FileName).IsRequired().HasMaxLength(255);
+            entity.Property(e => e.FilePath).IsRequired().HasMaxLength(500);
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.Prescriptions)
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         });

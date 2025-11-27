@@ -1,0 +1,1 @@
+- Put the api url as a an env variable in the client for maintainability, and make the necessary changes in the client  do not add extra 
