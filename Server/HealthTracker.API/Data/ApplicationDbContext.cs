@@ -14,6 +14,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<MedicationDose> MedicationDoses { get; set; }
     public DbSet<Vital> Vitals { get; set; }
     public DbSet<Prescription> Prescriptions { get; set; }
+    public DbSet<UserMetrics> UserMetrics { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

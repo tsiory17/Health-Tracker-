@@ -5,5 +5,7 @@ namespace HealthTracker.API.Repositories;
 
 public interface IUserMetricsService
 {
-    Task<UserMetrics> CreateUserMetricsAsync(UserMetricsRequest request);
+    Task<UserMetrics> CreateUserMetricsAsync(UserMetricsRequest request, int userId);
+    Task<UserMetrics?> GetUserMetricsByUserIdAsync(int userId);
+    Task<bool> HasCompletedSetupAsync(int userId);
 }
