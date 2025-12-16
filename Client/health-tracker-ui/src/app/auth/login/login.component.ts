@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../shared/services/auth.service';
+import { UserMetricsService } from '../../shared/services/user-metrics.service';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private userMetricsService: UserMetricsService,
     private router: Router
   ) {
     this.loginForm = this.fb.group({
@@ -29,8 +31,20 @@ export class LoginComponent {
   onSubmit(): void {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
-        // next: () => this.router.navigate(['/register']),
-        next:() => {alert("logged in successfull")},
+        next: () => {
+          this.userMetricsService.checkSetupStatus().subscribe({
+            next: (response) => {
+              if (response.hasCompletedSetup) {
+                this.router.navigate(['/home']);
+              } else {
+                this.router.navigate(['/setup']);
+              }
+            },
+            error: () => {
+              this.router.navigate(['/setup']);
+            }
+          });
+        },
         error: (err) => this.errorMessage = err.error?.message || 'Login failed'
       });
     }
