@@ -45,7 +45,7 @@ export class SetupComponent {
   onSubmit(): void {
     if (this.setupForm.valid) {
       this.userMetricsService.saveUserMetrics(this.setupForm.value).subscribe({
-        next: () => this.router.navigate(['/dashboard']),
+        next: () => this.router.navigate(['/home']),
         error: (err) => this.errorMessage = err.error?.message || 'Setup failed'
       });
     }

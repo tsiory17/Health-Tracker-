@@ -11,4 +11,5 @@ public interface IMedicationService
     Task<bool> DeleteMedicationAsync(int medicationId, int userId);
     Task<IEnumerable<MedicationDose>> GetDosesForMedicationAsync(int medicationId, int userId);
     Task<bool> MarkDoseAsTakenAsync(int doseId, int userId);
+    Task<bool> IsDuplicateMedicationAsync(string name, string dosage, int userId, int? excludeMedicationId = null);
 }

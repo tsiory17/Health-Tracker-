@@ -128,5 +128,12 @@ _ReSharper.Caches/
 *.out
 *.app
 
-# Claude 
+# Claude
 .claude/
+
+# Project documentation and notes
+Summary.md
+summary.md
+Update.md
+update.md
+prompt.md

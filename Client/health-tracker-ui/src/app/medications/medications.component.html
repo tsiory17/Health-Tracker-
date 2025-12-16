@@ -1,0 +1,55 @@
+<div class="min-h-screen bg-slate-50">
+  <!-- Tab Navigation -->
+  <div class="bg-white border-b border-slate-200 shadow-sm">
+    <div class="container mx-auto px-4">
+      <nav class="flex space-x-8" aria-label="Tabs">
+        <button
+          (click)="setActiveTab('list')"
+          [class.border-emerald-500]="activeTab === 'list'"
+          [class.text-emerald-600]="activeTab === 'list'"
+          [class.border-transparent]="activeTab !== 'list'"
+          [class.text-slate-600]="activeTab !== 'list'"
+          class="group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm hover:text-emerald-600 hover:border-emerald-300 transition-colors">
+          <svg
+            [class.text-emerald-500]="activeTab === 'list'"
+            [class.text-slate-400]="activeTab !== 'list'"
+            class="mr-2 h-5 w-5 group-hover:text-emerald-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+          </svg>
+          List View
+        </button>
+
+        <button
+          (click)="setActiveTab('calendar')"
+          [class.border-emerald-500]="activeTab === 'calendar'"
+          [class.text-emerald-600]="activeTab === 'calendar'"
+          [class.border-transparent]="activeTab !== 'calendar'"
+          [class.text-slate-600]="activeTab !== 'calendar'"
+          class="group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm hover:text-emerald-600 hover:border-emerald-300 transition-colors">
+          <svg
+            [class.text-emerald-500]="activeTab === 'calendar'"
+            [class.text-slate-400]="activeTab !== 'calendar'"
+            class="mr-2 h-5 w-5 group-hover:text-emerald-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          Calendar View
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="container mx-auto">
+    @if (activeTab === 'list') {
+      <app-medication-list></app-medication-list>
+    } @else if (activeTab === 'calendar') {
+      <app-medication-calendar></app-medication-calendar>
+    }
+  </div>
+</div>

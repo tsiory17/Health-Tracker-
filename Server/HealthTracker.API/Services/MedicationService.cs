@@ -91,4 +91,17 @@ public class MedicationService : IMedicationService
 
         return true;
     }
+
+    public async Task<bool> IsDuplicateMedicationAsync(string name, string dosage, int userId, int? excludeMedicationId = null)
+    {
+        var medications = await _medicationRepository.FindAsync(m => m.UserId == userId);
+
+        var duplicate = medications.Any(m =>
+            m.Name.ToLower() == name.ToLower() &&
+            m.Dosage.ToLower() == dosage.ToLower() &&
+            (!excludeMedicationId.HasValue || m.MedicationId != excludeMedicationId.Value)
+        );
+
+        return duplicate;
+    }
 }

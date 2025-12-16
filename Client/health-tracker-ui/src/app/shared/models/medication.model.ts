@@ -1,4 +1,5 @@
 export interface Medication {
+  
   medicationId: number;
   userId: number;
   name: string;

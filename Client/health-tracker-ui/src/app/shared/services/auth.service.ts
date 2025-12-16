@@ -17,6 +17,28 @@ export class AuthService {
     const token = this.getToken();
     if (token) {
       // Decode token and set current user
+      const user = this.decodeToken(token);
+      if (user) {
+        this.currentUserSubject.next(user);
+      }
+    }
+  }
+
+  private decodeToken(token: string): User | null {
+    try {
+      const payload = token.split('.')[1];
+      const decodedPayload = atob(payload);
+      const parsed = JSON.parse(decodedPayload);
+
+      // Extract user information from token claims
+      return {
+        userId: parsed.userId || parsed.sub,
+        username: parsed.username || parsed.unique_name,
+        email: parsed.email
+      };
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
     }
   }
 

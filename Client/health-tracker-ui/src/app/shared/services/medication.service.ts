@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Medication, MedicationDose } from '../models/medication.model';
+import { MedicationDto } from '../../medications/models/medication-dto.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -20,11 +21,11 @@ export class MedicationService {
     return this.http.get<Medication>(`${this.apiUrl}/${id}`);
   }
 
-  createMedication(medication: Partial<Medication>): Observable<Medication> {
+  createMedication(medication: MedicationDto): Observable<Medication> {
     return this.http.post<Medication>(this.apiUrl, medication);
   }
 
-  updateMedication(id: number, medication: Partial<Medication>): Observable<Medication> {
+  updateMedication(id: number, medication: MedicationDto): Observable<Medication> {
     return this.http.put<Medication>(`${this.apiUrl}/${id}`, medication);
   }
 

@@ -9,6 +9,15 @@ export interface UserMetricsRequest {
   weightKg: number;
 }
 
+export interface UserMetrics {
+  userMetricsId: number;
+  userId: number;
+  dateOfBirth: string;
+  heightCm: number;
+  weightKg: number;
+  age: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -19,5 +28,13 @@ export class UserMetricsService {
 
   saveUserMetrics(request: UserMetricsRequest): Observable<any> {
     return this.http.post(`${this.apiUrl}`, request);
+  }
+
+  checkSetupStatus(): Observable<{ hasCompletedSetup: boolean }> {
+    return this.http.get<{ hasCompletedSetup: boolean }>(`${this.apiUrl}/setup-status`);
+  }
+
+  getUserMetrics(): Observable<UserMetrics> {
+    return this.http.get<UserMetrics>(`${this.apiUrl}`);
   }
 }

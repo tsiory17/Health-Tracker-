@@ -1,0 +1,140 @@
+/* FullCalendar custom styling to match Tailwind theme */
+
+::ng-deep .fc {
+  font-family: inherit;
+}
+
+::ng-deep .fc-toolbar-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a; /* slate-900 */
+}
+
+/* Calendar buttons */
+::ng-deep .fc-button {
+  background-color: #10b981 !important; /* emerald-600 */
+  border-color: #10b981 !important;
+  font-weight: 500;
+  text-transform: capitalize;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+::ng-deep .fc-button:hover {
+  background-color: #059669 !important; /* emerald-700 */
+  border-color: #059669 !important;
+}
+
+::ng-deep .fc-button:disabled {
+  background-color: #cbd5e1 !important; /* slate-300 */
+  border-color: #cbd5e1 !important;
+  opacity: 1;
+}
+
+::ng-deep .fc-button-active {
+  background-color: #047857 !important; /* emerald-800 */
+  border-color: #047857 !important;
+}
+
+/* Day numbers */
+::ng-deep .fc-daygrid-day-number {
+  color: #475569; /* slate-600 */
+  font-weight: 500;
+  padding: 0.5rem;
+}
+
+/* Today highlight */
+::ng-deep .fc-day-today {
+  background-color: #f0fdf4 !important; /* emerald-50 */
+}
+
+::ng-deep .fc-day-today .fc-daygrid-day-number {
+  color: #059669; /* emerald-700 */
+  font-weight: 700;
+}
+
+/* Calendar events */
+::ng-deep .fc-event {
+  cursor: pointer;
+  border-radius: 0.375rem;
+  padding: 2px 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: none;
+  margin-bottom: 2px;
+}
+
+::ng-deep .fc-event:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  transition: all 0.2s;
+}
+
+/* Day cell borders */
+::ng-deep .fc-daygrid-day {
+  border-color: #e2e8f0; /* slate-200 */
+}
+
+::ng-deep .fc-scrollgrid {
+  border-color: #e2e8f0 !important;
+}
+
+/* Week number */
+::ng-deep .fc-daygrid-week-number {
+  color: #94a3b8; /* slate-400 */
+  font-weight: 500;
+}
+
+/* Month/Week view headers */
+::ng-deep .fc-col-header-cell {
+  background-color: #f8fafc; /* slate-50 */
+  border-color: #e2e8f0; /* slate-200 */
+  padding: 0.75rem 0.5rem;
+  font-weight: 600;
+  color: #334155; /* slate-700 */
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+/* Remove borders from header */
+::ng-deep .fc-col-header-cell-cushion {
+  padding: 0;
+}
+
+/* Event time text */
+::ng-deep .fc-event-time {
+  font-weight: 600;
+}
+
+/* Event title */
+::ng-deep .fc-event-title {
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  ::ng-deep .fc-toolbar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  ::ng-deep .fc-toolbar-chunk {
+    display: flex;
+    justify-content: center;
+  }
+
+  ::ng-deep .fc-event {
+    font-size: 0.7rem;
+  }
+
+  ::ng-deep .fc-daygrid-day-number {
+    font-size: 0.875rem;
+  }
+}
+
+/* Calendar container */
+.calendar-container {
+  background-color: white;
+  border-radius: 0.5rem;
+}
