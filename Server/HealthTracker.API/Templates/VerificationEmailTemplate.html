@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #4CAF50;
+            margin: 0;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 20px 0;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+        }
+        .warning {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            <h1>Health Tracker</h1>
+        </div>
+        <div class='content'>
+            <h2>Welcome, {USERNAME}!</h2>
+            <p>Thank you for registering with Health Tracker. To complete your registration and start tracking your health, please verify your email address.</p>
+            <p style='text-align: center;'>
+                <a href='{VERIFICATION_LINK}' class='button'>Verify Email Address</a>
+            </p>
+            <p>Or copy and paste this link into your browser:</p>
+            <p style='word-break: break-all; color: #4CAF50;'>{VERIFICATION_LINK}</p>
+            <p class='warning'>This verification link will expire in {EXPIRY_HOURS} hours.</p>
+            <p>If you didn't create an account with Health Tracker, please ignore this email.</p>
+        </div>
+        <div class='footer'>
+            <p>&copy; 2025 Health Tracker. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
