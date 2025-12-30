@@ -27,7 +27,7 @@ builder.Services.AddSignalR();
 
 // Configure Database Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -77,7 +77,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        // Support both local development and production
+        var frontendUrl = builder.Configuration["AppSettings:FrontendUrl"] ?? "http://localhost:4200";
+        policy.WithOrigins("http://localhost:4200", frontendUrl)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
