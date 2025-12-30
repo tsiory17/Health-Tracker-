@@ -47,7 +47,7 @@ artifacts/
 *.ndf
 
 # Migration backup files
-Migrations/
+# Migrations/ - Now tracking migrations for deployment
 
 # Angular
 /health-tracker-ui/node_modules/
