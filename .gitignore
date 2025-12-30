@@ -65,6 +65,8 @@ Migrations/
 
 # IDEs and editors
 .idea/
+.cursor/
+.windsurfrules
 *.swp
 *.swo
 *~
@@ -130,6 +132,7 @@ _ReSharper.Caches/
 
 # Claude
 .claude/
+.superdesign/
 
 # Project documentation and notes
 Summary.md
@@ -137,3 +140,4 @@ summary.md
 Update.md
 update.md
 prompt.md
+CLAUDE.md
