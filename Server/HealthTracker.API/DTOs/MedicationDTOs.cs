@@ -6,7 +6,8 @@ public record CreateMedicationRequest(
     string Frequency,
     DateTime StartDate,
     DateTime? EndDate,
-    string? Notes
+    string? Notes,
+    string? DoseTimes
 );
 
 public record UpdateMedicationRequest(
@@ -15,7 +16,8 @@ public record UpdateMedicationRequest(
     string Frequency,
     DateTime StartDate,
     DateTime? EndDate,
-    string? Notes
+    string? Notes,
+    string? DoseTimes
 );
 
 public record MedicationResponse(

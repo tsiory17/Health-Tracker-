@@ -53,6 +53,26 @@
   font-weight: 700;
 }
 
+/* Hide default today highlighting when we have a custom user today */
+::ng-deep .fc-day.hide-default-today {
+  background-color: transparent !important;
+}
+
+::ng-deep .fc-day.hide-default-today .fc-daygrid-day-number {
+  color: #475569 !important; /* slate-600 - default color */
+  font-weight: 500 !important; /* default weight */
+}
+
+/* Custom user today highlighting (based on stored timezone) */
+::ng-deep .fc-day.user-today {
+  background-color: #f0fdf4 !important; /* emerald-50 */
+}
+
+::ng-deep .fc-day.user-today .fc-daygrid-day-number {
+  color: #059669 !important; /* emerald-700 */
+  font-weight: 700 !important;
+}
+
 /* Calendar events */
 ::ng-deep .fc-event {
   cursor: pointer;
@@ -68,6 +88,54 @@
   opacity: 0.9;
   transform: translateY(-1px);
   transition: all 0.2s;
+}
+
+/* Status-based event colors */
+::ng-deep .fc-event.event-scheduled {
+  background-color: #10b981 !important; /* Green - scheduled/pending */
+  color: white !important;
+}
+
+::ng-deep .fc-event.event-taken {
+  background-color: #6b7280 !important; /* Gray - all doses taken */
+  color: white !important;
+}
+
+::ng-deep .fc-event.event-missed {
+  background-color: #ef4444 !important; /* Red - has missed doses */
+  color: white !important;
+}
+
+::ng-deep .fc-event.event-partial {
+  background-color: #f59e0b !important; /* Yellow - partial completion */
+  color: white !important;
+}
+
+/* Add a small status indicator icons */
+::ng-deep .fc-event.event-scheduled::before {
+  content: '○';
+  margin-right: 4px;
+  color: #d1fae5;
+}
+
+::ng-deep .fc-event.event-taken::before {
+  content: '✓';
+  margin-right: 4px;
+  color: #e5e7eb;
+  font-weight: bold;
+}
+
+::ng-deep .fc-event.event-missed::before {
+  content: '✕';
+  margin-right: 4px;
+  color: #fee2e2;
+  font-weight: bold;
+}
+
+::ng-deep .fc-event.event-partial::before {
+  content: '◐';
+  margin-right: 4px;
+  color: #fef3c7;
 }
 
 /* Day cell borders */

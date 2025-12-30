@@ -29,6 +29,12 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.Email).IsRequired().HasMaxLength(255);
             entity.HasIndex(e => e.Email).IsUnique();
             entity.Property(e => e.PasswordHash).IsRequired();
+            entity.Property(e => e.IsEmailVerified).IsRequired().HasDefaultValue(false);
+            entity.Property(e => e.EmailVerificationToken).HasMaxLength(500);
+            entity.Property(e => e.EmailVerificationTokenExpiry);
+            entity.Property(e => e.PasswordResetToken).HasMaxLength(500);
+            entity.Property(e => e.PasswordResetTokenExpiry);
+            entity.Property(e => e.EmailNotificationsEnabled).IsRequired().HasDefaultValue(true);
         });
 
         // Medication configuration
@@ -49,6 +55,28 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<MedicationDose>(entity =>
         {
             entity.HasKey(e => e.DoseId);
+
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasDefaultValue(DoseStatus.Pending);
+
+            entity.Property(e => e.Notes)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.UpcomingReminderSent)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            entity.Property(e => e.MissedDoseEmailSent)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            // Indexes for notification queries
+            entity.HasIndex(e => new { e.ScheduledTime, e.Status, e.UpcomingReminderSent })
+                .HasDatabaseName("IX_MedicationDose_UpcomingReminder");
+
+            entity.HasIndex(e => new { e.ScheduledTime, e.IsTaken, e.MissedDoseEmailSent })
+                .HasDatabaseName("IX_MedicationDose_MissedDose");
 
             entity.HasOne(e => e.Medication)
                 .WithMany(m => m.MedicationDoses)
@@ -77,6 +105,20 @@ public class ApplicationDbContext : DbContext
 
             entity.HasOne(e => e.User)
                 .WithMany(u => u.Prescriptions)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // UserMetrics configuration
+        modelBuilder.Entity<UserMetrics>(entity =>
+        {
+            entity.HasKey(e => e.UserMetricsId);
+            entity.Property(e => e.RecordedAt).IsRequired();
+            entity.Property(e => e.HeightCm).IsRequired();
+            entity.Property(e => e.WeightKg).IsRequired();
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.UserMetricsHistory)
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         });

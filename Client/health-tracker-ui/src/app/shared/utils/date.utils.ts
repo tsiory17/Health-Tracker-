@@ -18,3 +18,27 @@ export function formatDateForInput(date: Date): string {
 export function getTodayFormatted(): string {
   return formatDateForInput(new Date());
 }
+
+/**
+ * Converts a date input string (yyyy-MM-dd) to ISO format preserving local date
+ * without timezone conversion. Sends date at midnight in ISO format.
+ * @param dateString - Date string in yyyy-MM-dd format
+ * @returns ISO string representing midnight on that date (e.g., "2024-01-15T00:00:00")
+ * @example formatDateToLocalISO("2024-01-15") // "2024-01-15T00:00:00"
+ */
+export function formatDateToLocalISO(dateString: string): string {
+  // Don't use Date constructor as it may interpret timezone
+  // Instead, build the ISO string directly
+  return `${dateString}T00:00:00`;
+}
+
+/**
+ * Parses a date from backend (which may include timezone) and extracts just the date portion
+ * @param dateString - ISO date string from backend
+ * @returns Date string in yyyy-MM-dd format
+ * @example parseDateFromBackend("2024-01-15T00:00:00Z") // "2024-01-15"
+ */
+export function parseDateFromBackend(dateString: string): string {
+  const date = new Date(dateString);
+  return formatDateForInput(date);
+}

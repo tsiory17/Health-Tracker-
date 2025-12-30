@@ -1,5 +1,6 @@
+import { DoseStatus } from './dose-status.enum';
+
 export interface Medication {
-  
   medicationId: number;
   userId: number;
   name: string;
@@ -8,6 +9,7 @@ export interface Medication {
   startDate: Date;
   endDate?: Date;
   notes?: string;
+  doseTimes?: string; // JSON array of times e.g., '["09:00","21:00"]'
 }
 
 export interface MedicationDose {
@@ -16,4 +18,6 @@ export interface MedicationDose {
   scheduledTime: Date;
   takenAt?: Date;
   isTaken: boolean;
+  status: DoseStatus;
+  notes?: string;
 }

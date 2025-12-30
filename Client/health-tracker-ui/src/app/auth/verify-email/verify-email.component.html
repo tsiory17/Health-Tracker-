@@ -1,0 +1,51 @@
+<div class="min-h-screen flex items-center justify-center bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-slate-100">
+    <div class="text-center">
+      @if (isVerifying) {
+        <div class="mx-auto h-12 w-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </div>
+        <h2 class="text-3xl font-bold tracking-tight text-slate-900">Verifying Email</h2>
+        <p class="mt-2 text-sm text-slate-600">Please wait while we verify your email address...</p>
+      }
+
+      @if (!isVerifying && isSuccess) {
+        <div class="mx-auto h-12 w-12 bg-emerald-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="h-8 w-8 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h2 class="text-3xl font-bold tracking-tight text-emerald-900">Email Verified</h2>
+        <p class="mt-2 text-sm text-slate-600">{{ message }}</p>
+        <div class="mt-4 rounded-lg bg-emerald-50 p-4 border border-emerald-200">
+          <p class="text-sm text-emerald-700">Redirecting to login page in a few seconds...</p>
+        </div>
+      }
+
+      @if (!isVerifying && !isSuccess) {
+        <div class="mx-auto h-12 w-12 bg-red-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="h-8 w-8 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+          </svg>
+        </div>
+        <h2 class="text-3xl font-bold tracking-tight text-red-900">Verification Failed</h2>
+        <p class="mt-2 text-sm text-slate-600">{{ message }}</p>
+      }
+    </div>
+
+    @if (!isVerifying) {
+      <div class="mt-6">
+        <a
+          [routerLink]="['/login']"
+          [queryParams]="{ email: email, verified: isSuccess ? 'success' : '' }"
+          class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-200 shadow-md hover:shadow-lg"
+        >
+          Go to Login
+        </a>
+      </div>
+    }
+  </div>
+</div>

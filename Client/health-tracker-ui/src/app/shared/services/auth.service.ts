@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { LoginRequest, RegisterRequest, AuthResponse, User } from '../models/user.model';
+import { LoginRequest, RegisterRequest, AuthResponse, User, RegisterResponse, VerifyEmailRequest, ResendVerificationRequest, MessageResponse, ForgotPasswordRequest, ResetPasswordRequest, ValidateResetTokenRequest } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -34,19 +34,16 @@ export class AuthService {
       return {
         userId: parsed.userId || parsed.sub,
         username: parsed.username || parsed.unique_name,
-        email: parsed.email
+        email: parsed.email,
+        timeZoneId: parsed.timeZoneId || parsed.TimeZoneId || 'UTC'
       };
-    } catch (error) {
-      console.error('Error decoding token:', error);
+    } catch {
       return null;
     }
   }
 
-  register(request: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, request)
-      .pipe(
-        tap(response => this.handleAuth(response))
-      );
+  register(request: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, request);
   }
 
   login(request: LoginRequest): Observable<AuthResponse> {
@@ -62,8 +59,34 @@ export class AuthService {
   }
 
   private handleAuth(response: AuthResponse): void {
-    localStorage.setItem('token', response.token);
-    this.currentUserSubject.next(response.user);
+    if (response.token) {
+      localStorage.setItem('token', response.token);
+      this.currentUserSubject.next(response.user);
+    }
+  }
+
+  verifyEmail(request: VerifyEmailRequest): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.apiUrl}/verify-email`, request);
+  }
+
+  resendVerification(request: ResendVerificationRequest): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.apiUrl}/resend-verification`, request);
+  }
+
+  forgotPassword(request: ForgotPasswordRequest): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.apiUrl}/forgot-password`, request);
+  }
+
+  validateResetToken(request: ValidateResetTokenRequest): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.apiUrl}/validate-reset-token`, request);
+  }
+
+  resetPassword(request: ResetPasswordRequest): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.apiUrl}/reset-password`, request);
+  }
+
+  updateProfile(timeZoneId: string): Observable<MessageResponse> {
+    return this.http.put<MessageResponse>(`${this.apiUrl}/update-profile`, { timeZoneId });
   }
 
   getToken(): string | null {
@@ -72,6 +95,17 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+
+  getCurrentUser(): User | null {
+    return this.currentUserSubject.value;
+  }
+  updateCurrentUserTimezone(timeZoneId: string): void {
+    const user = this.currentUserSubject.value;
+    if (user) {
+      const updatedUser = { ...user, timeZoneId };
+      this.currentUserSubject.next(updatedUser);
+    }
   }
 }
  

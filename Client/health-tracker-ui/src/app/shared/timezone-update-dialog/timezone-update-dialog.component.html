@@ -1,0 +1,39 @@
+<div class="dialog-overlay" (click)="onDismiss()">
+  <div class="dialog-container" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <span class="globe-icon">🌍</span>
+      <h2>Timezone Change Detected</h2>
+    </div>
+
+    <div class="dialog-content">
+      <p>We noticed you're in a different timezone:</p>
+
+      <div class="timezone-comparison">
+        <div class="timezone-item">
+          <label>Current:</label>
+          <strong>{{ getCurrentDisplayName() }}</strong>
+        </div>
+
+        <div class="timezone-arrow">→</div>
+
+        <div class="timezone-item detected">
+          <label>Detected:</label>
+          <strong>{{ getDetectedDisplayName() }}</strong>
+        </div>
+      </div>
+
+      <p class="info-text">
+        Update your timezone for accurate medication reminders?
+      </p>
+    </div>
+
+    <div class="dialog-actions">
+      <button class="btn btn-secondary" (click)="onDismiss()">
+        Not Now
+      </button>
+      <button class="btn btn-primary" (click)="onUpdate()">
+        Yes, Update
+      </button>
+    </div>
+  </div>
+</div>

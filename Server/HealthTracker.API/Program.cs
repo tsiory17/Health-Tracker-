@@ -6,11 +6,24 @@ using System.Text;
 using HealthTracker.API.Data;
 using HealthTracker.API.Repositories;
 using HealthTracker.API.Services;
+using HealthTracker.API.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add MVC Controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Handle circular references in navigation properties
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        // Use camel case for JSON properties (web standard)
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+        // Make property name matching case-insensitive
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    });
+
+// Add SignalR
+builder.Services.AddSignalR();
 
 // Configure Database Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -38,6 +51,23 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
         ClockSkew = TimeSpan.Zero
     };
+
+    // Configure JWT for WebSocket (SignalR)
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+            {
+                context.Token = accessToken;
+            }
+
+            return Task.CompletedTask;
+        }
+    };
 });
 
 builder.Services.AddAuthorization();
@@ -62,6 +92,18 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IMedicationService, MedicationService>();
 builder.Services.AddScoped<IVitalService, VitalService>();
 builder.Services.AddScoped<IUserMetricsService, UserMetricsService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IRealTimeNotificationService, RealTimeNotificationService>();
+builder.Services.AddScoped<IMedicationAiService, MedicationAiService>();
+
+// Register Medication Notification Services
+builder.Services.AddScoped<IMedicationNotificationService, MedicationNotificationService>();
+builder.Services.Configure<MedicationNotificationSettings>(builder.Configuration.GetSection("MedicationNotificationSettings"));
+
+// Register Background Services
+builder.Services.AddHostedService<HealthTracker.API.Jobs.UpcomingReminderBackgroundService>();
+builder.Services.AddHostedService<HealthTracker.API.Jobs.MissedDoseNotificationBackgroundService>();
 
 // Configure Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
@@ -124,5 +166,8 @@ app.UseAuthorization();
 
 // Map MVC Controllers
 app.MapControllers();
+
+// Map SignalR Hub
+app.MapHub<HealthTracker.API.Hubs.NotificationHub>("/hubs/notifications");
 
 app.Run();

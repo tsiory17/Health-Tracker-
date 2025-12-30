@@ -10,6 +10,7 @@ public class Medication
     public DateTime StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public string? Notes { get; set; }
+    public string? DoseTimes { get; set; } // JSON array of times e.g., ["09:00","21:00"]
 
     // Navigation properties
     public User User { get; set; } = null!;

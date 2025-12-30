@@ -36,6 +36,15 @@ public static class MedicationValidator
             return "Frequency cannot exceed 100 characters";
         }
 
+        // Prevent adding medications with past start dates
+        // Allow dates from yesterday onwards to account for timezone differences
+        // (Users in timezones ahead of UTC might send "today" as "yesterday" in UTC)
+        var minAllowedDate = DateTime.UtcNow.Date.AddDays(-1);
+        if (request.StartDate.Date < minAllowedDate)
+        {
+            return "Cannot add medication with a past start date";
+        }
+
         if (request.EndDate.HasValue && request.EndDate.Value < request.StartDate)
         {
             return "End date cannot be before start date";
@@ -75,6 +84,9 @@ public static class MedicationValidator
         {
             return "Frequency cannot exceed 100 characters";
         }
+
+        // Note: We don't validate past start dates for updates since
+        // existing medications may have been created in the past
 
         if (request.EndDate.HasValue && request.EndDate.Value < request.StartDate)
         {

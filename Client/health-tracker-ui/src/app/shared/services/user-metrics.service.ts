@@ -16,6 +16,8 @@ export interface UserMetrics {
   heightCm: number;
   weightKg: number;
   age: number;
+  recordedAt: Date;
+  bmi: number;
 }
 
 @Injectable({
@@ -26,8 +28,12 @@ export class UserMetricsService {
 
   constructor(private http: HttpClient) { }
 
-  saveUserMetrics(request: UserMetricsRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, request);
+  saveUserMetrics(request: UserMetricsRequest): Observable<UserMetrics> {
+    return this.http.post<UserMetrics>(`${this.apiUrl}`, request);
+  }
+
+  updateUserMetrics(request: UserMetricsRequest): Observable<UserMetrics> {
+    return this.http.put<UserMetrics>(`${this.apiUrl}`, request);
   }
 
   checkSetupStatus(): Observable<{ hasCompletedSetup: boolean }> {
@@ -36,5 +42,9 @@ export class UserMetricsService {
 
   getUserMetrics(): Observable<UserMetrics> {
     return this.http.get<UserMetrics>(`${this.apiUrl}`);
+  }
+
+  getUserMetricsHistory(): Observable<UserMetrics[]> {
+    return this.http.get<UserMetrics[]>(`${this.apiUrl}/history`);
   }
 }

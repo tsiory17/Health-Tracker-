@@ -1,13 +1,13 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="mb-6 flex justify-between items-center">
+<div class="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
+  <div class="mb-4 sm:mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
     <div>
-      <h2 class="text-2xl font-bold text-slate-900">My Medications</h2>
-      <p class="mt-1 text-sm text-slate-600">Manage your medication list</p>
+      <h2 class="text-xl sm:text-2xl font-bold text-slate-900">My Medications</h2>
+      <p class="mt-1 text-xs sm:text-sm text-slate-600">Manage your medication list</p>
     </div>
     <button
       routerLink="/medications/new"
-      class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2 shadow-md hover:shadow-lg">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      class="px-3 sm:px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2 shadow-md hover:shadow-lg text-sm sm:text-base w-full sm:w-auto justify-center">
+      <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
       </svg>
       Add Medication
@@ -34,33 +34,33 @@
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
     </div>
   } @else if (medications.length === 0) {
-    <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-12 text-center">
-      <svg class="mx-auto h-16 w-16 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div class="bg-white rounded-xl sm:rounded-2xl shadow-xl border border-slate-100 p-8 sm:p-12 text-center">
+      <svg class="mx-auto h-12 w-12 sm:h-16 sm:w-16 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
       </svg>
-      <h3 class="mt-4 text-lg font-semibold text-slate-900">No medications yet</h3>
-      <p class="mt-2 text-sm text-slate-600">Get started by adding your first medication</p>
+      <h3 class="mt-3 sm:mt-4 text-base sm:text-lg font-semibold text-slate-900">No medications yet</h3>
+      <p class="mt-2 text-xs sm:text-sm text-slate-600 px-4">Get started by adding your first medication</p>
       <button
         routerLink="/medications/new"
-        class="mt-6 inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        class="mt-4 sm:mt-6 inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg text-sm sm:text-base">
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
         Add First Medication
       </button>
     </div>
   } @else {
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       @for (medication of medications; track medication.medicationId) {
-        <div class="bg-white rounded-xl shadow-md border border-slate-100 p-6 hover:shadow-lg transition-shadow">
-          <div class="flex justify-between items-start mb-4">
-            <div class="flex-1">
-              <h3 class="text-lg font-semibold text-slate-900">{{ medication.name }}</h3>
-              <p class="text-sm text-slate-600 mt-1">{{ medication.dosage }}</p>
+        <div class="bg-white rounded-lg sm:rounded-xl shadow-md border border-slate-100 p-4 sm:p-6 hover:shadow-lg transition-shadow">
+          <div class="flex justify-between items-start mb-3 sm:mb-4">
+            <div class="flex-1 min-w-0 pr-2">
+              <h3 class="text-base sm:text-lg font-semibold text-slate-900 truncate">{{ medication.name }}</h3>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1">{{ medication.dosage }}</p>
             </div>
             <div class="flex items-center gap-2">
               <button
-                [routerLink]="['/medications/edit', medication.medicationId]"
+                (click)="openEditModal(medication)"
                 class="p-2 text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                 title="Edit">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,7 +68,7 @@
                 </svg>
               </button>
               <button
-                (click)="deleteMedication(medication)"
+                (click)="openDeleteModal(medication)"
                 class="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                 title="Delete">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,7 +104,13 @@
 
             @if (medication.notes) {
               <div class="mt-3 pt-3 border-t border-slate-100">
-                <p class="text-xs text-slate-500 italic">{{ medication.notes }}</p>
+                <p class="text-xs font-semibold text-slate-700 mb-2">Notes & Recommendations:</p>
+                @for (line of parseNotesWithColorCoding(medication.notes); track $index) {
+                  <p class="text-xs mb-1" [ngClass]="line.class">{{ line.text }}</p>
+                }
+                <p class="text-xs text-slate-400 italic mt-2">
+                  AI-generated suggestions - verify with a pharmacist
+                </p>
               </div>
             }
           </div>
@@ -113,3 +119,254 @@
     </div>
   }
 </div>
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteModal && medicationToDelete) {
+  <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Background overlay -->
+    <div class="fixed inset-0 bg-slate-900 bg-opacity-75 transition-opacity" (click)="closeDeleteModal()"></div>
+
+    <!-- Modal container -->
+    <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+      <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+        <!-- Modal content -->
+        <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start">
+            <!-- Icon -->
+            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+              <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+              </svg>
+            </div>
+
+            <!-- Text content -->
+            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+              <h3 class="text-lg font-semibold leading-6 text-slate-900" id="modal-title">
+                Delete Medication
+              </h3>
+              <div class="mt-2">
+                <p class="text-sm text-slate-600">
+                  Are you sure you want to delete <span class="font-semibold text-slate-900">"{{ medicationToDelete.name }}"</span>?
+                </p>
+                <p class="text-sm text-slate-600 mt-2">
+                  This action cannot be undone. All associated doses and history will be permanently removed.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal actions -->
+        <div class="bg-slate-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 gap-3">
+          <button
+            type="button"
+            (click)="confirmDelete()"
+            class="inline-flex w-full justify-center rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:w-auto transition-colors">
+            Delete
+          </button>
+          <button
+            type="button"
+            (click)="closeDeleteModal()"
+            class="mt-3 inline-flex w-full justify-center rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 sm:mt-0 sm:w-auto transition-colors">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Edit Medication Modal -->
+@if (showEditModal && medicationToEdit) {
+  <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Background overlay -->
+    <div class="fixed inset-0 bg-slate-900 bg-opacity-75 transition-opacity" (click)="closeEditModal()"></div>
+
+    <!-- Modal container -->
+    <div class="flex min-h-full items-center justify-center p-4">
+      <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+        <!-- Modal header -->
+        <div class="bg-white px-6 pt-6 pb-4 border-b border-slate-200">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xl font-semibold text-slate-900" id="modal-title">
+              Edit Medication
+            </h3>
+            <button (click)="closeEditModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal content -->
+        <form [formGroup]="editForm" (ngSubmit)="confirmUpdate()" class="px-6 py-4">
+          <div class="space-y-4">
+            <!-- Medication Name -->
+            <div>
+              <label for="edit-name" class="block text-sm font-medium text-slate-700">Medication Name</label>
+              <input
+                type="text"
+                id="edit-name"
+                formControlName="name"
+                class="mt-1 block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-all outline-none"
+              />
+              @if (editForm.get('name')?.invalid && editForm.get('name')?.touched) {
+                <p class="mt-1 text-xs text-red-500">Medication name is required</p>
+              }
+            </div>
+
+            <!-- Dosage Amount and Unit -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="edit-dosageAmount" class="block text-sm font-medium text-slate-700">Dosage Amount</label>
+                <input
+                  type="number"
+                  id="edit-dosageAmount"
+                  formControlName="dosageAmount"
+                  step="0.01"
+                  class="mt-1 block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-all outline-none"
+                />
+              </div>
+              <div>
+                <label for="edit-dosageUnit" class="block text-sm font-medium text-slate-700">Unit</label>
+                <select
+                  id="edit-dosageUnit"
+                  formControlName="dosageUnit"
+                  class="mt-1 block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-all outline-none"
+                >
+                  <option *ngFor="let unit of dosageUnits" [value]="unit.value">{{ unit.label }}</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Frequency -->
+            <div>
+              <label for="edit-frequency" class="block text-sm font-medium text-slate-700">Frequency</label>
+              <select
+                id="edit-frequency"
+                formControlName="frequency"
+                class="mt-1 block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-all outline-none"
+              >
+                <option *ngFor="let freq of frequencies" [value]="freq.value">{{ freq.label }}</option>
+              </select>
+            </div>
+
+            <!-- Dose Times -->
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-2">Dose Times</label>
+              <div class="space-y-2">
+                <div *ngFor="let time of doseTimes; let i = index" class="flex items-center gap-2">
+                  <input
+                    type="time"
+                    [value]="time"
+                    (change)="updateDoseTime(i, $any($event.target).value)"
+                    class="flex-1 px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-all outline-none"
+                  />
+                  <button
+                    type="button"
+                    (click)="removeDoseTime(i)"
+                    [disabled]="doseTimes.length === 1"
+                    class="p-2 border border-red-300 text-red-600 bg-red-50 hover:bg-red-100 disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-300 disabled:cursor-not-allowed rounded-lg transition-all"
+                  >
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <button
+                type="button"
+                (click)="addDoseTime()"
+                class="mt-2 w-full flex items-center justify-center gap-2 py-2 px-4 border border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-all text-sm font-medium"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Add Dose Time
+              </button>
+            </div>
+
+            <!-- Start Date -->
+            <div>
+              <label for="edit-startDate" class="block text-sm font-medium text-slate-700">Start Date</label>
+              <input
+                type="date"
+                id="edit-startDate"
+                formControlName="startDate"
+                class="mt-1 block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-all outline-none"
+              />
+            </div>
+
+            <!-- Duration -->
+            <div>
+              <label for="edit-durationDays" class="block text-sm font-medium text-slate-700">Duration (Optional)</label>
+              <p class="text-xs text-slate-500 mb-2">Leave empty for ongoing medication, or enter 1-365 days</p>
+              <input
+                type="number"
+                id="edit-durationDays"
+                formControlName="durationDays"
+                min="1"
+                max="365"
+                placeholder="e.g. 7"
+                class="mt-1 block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-all outline-none"
+              />
+
+              <!-- Quick select buttons -->
+              <div class="mt-2">
+                <label class="block text-xs font-medium text-slate-600 mb-1">Quick Select:</label>
+                <div class="flex flex-wrap gap-1">
+                  <button
+                    *ngFor="let option of quickDurationOptions"
+                    type="button"
+                    (click)="setQuickDuration(option.value)"
+                    class="px-2 py-1 text-xs bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300 rounded transition-colors"
+                  >
+                    {{ option.label }}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Notes -->
+            <div>
+              <label for="edit-notes" class="block text-sm font-medium text-slate-700">Notes (Optional)</label>
+              <textarea
+                id="edit-notes"
+                formControlName="notes"
+                rows="3"
+                class="mt-1 block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-all outline-none resize-none"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Modal actions -->
+          <div class="mt-6 border-t border-slate-200 pt-4">
+            @if (editForm.invalid) {
+              <p class="mb-3 text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                Please fill in all required fields to update the medication
+              </p>
+            }
+            <div class="flex gap-3 justify-end">
+              <button
+                type="button"
+                (click)="closeEditModal()"
+                class="px-4 py-2 text-sm font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                [disabled]="editForm.invalid"
+                class="px-4 py-2 text-sm font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors"
+                [title]="editForm.invalid ? 'Please fill in all required fields' : 'Update medication'"
+              >
+                Update Medication
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}

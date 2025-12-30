@@ -1,0 +1,135 @@
+/* Footer Component - Botanical Wellness Theme */
+
+.footer {
+  margin-top: 4rem;
+  padding: 2.5rem 1.5rem 2rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(216, 243, 220, 0.15) 100%);
+  border-top: 1px solid var(--celadon);
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Brand Section */
+.footer-brand {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.footer-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--mint-leaf-2);
+  transition: transform 0.3s ease;
+}
+
+.footer-logo:hover .footer-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.footer-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dark-emerald);
+  letter-spacing: -0.02em;
+}
+
+.footer-tagline {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--sea-green);
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Divider */
+.footer-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--celadon-2) 50%,
+    transparent 100%
+  );
+  margin: 2rem 0 1.5rem;
+}
+
+/* Bottom Section */
+.footer-bottom {
+  text-align: center;
+}
+
+.footer-copyright {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--pine-teal);
+  margin: 0 0 0.5rem 0;
+  font-weight: 500;
+}
+
+.footer-meta {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--sea-green);
+  margin: 0;
+  font-weight: 400;
+}
+
+.footer-heart {
+  color: var(--mint-leaf-2);
+  display: inline-block;
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  10%, 30% {
+    transform: scale(1.1);
+  }
+  20%, 40% {
+    transform: scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer {
+    margin-top: 3rem;
+    padding: 2rem 1rem 1.5rem;
+  }
+
+  .footer-title {
+    font-size: 1.25rem;
+  }
+
+  .footer-tagline {
+    font-size: 0.85rem;
+  }
+
+  .footer-copyright,
+  .footer-meta {
+    font-size: 0.8rem;
+  }
+}

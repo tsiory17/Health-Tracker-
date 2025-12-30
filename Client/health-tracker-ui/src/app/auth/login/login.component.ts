@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserMetricsService } from '../../shared/services/user-metrics.service';
@@ -12,15 +12,19 @@ import { UserMetricsService } from '../../shared/services/user-metrics.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage = '';
+  successMessage = '';
+  requiresVerification = false;
+  resendingEmail = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private userMetricsService: UserMetricsService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -28,8 +32,28 @@ export class LoginComponent {
     });
   }
 
+  ngOnInit(): void {
+    // Check for pre-filled email from registration or verification
+    const emailParam = this.route.snapshot.queryParamMap.get('email');
+    const verifiedParam = this.route.snapshot.queryParamMap.get('verified');
+
+    if (emailParam) {
+      this.loginForm.patchValue({ email: emailParam });
+
+      if (verifiedParam === 'pending') {
+        this.successMessage = 'Registration successful! Please check your email to verify your account before logging in.';
+      } else if (verifiedParam === 'success') {
+        this.successMessage = 'Email verified successfully! You can now log in.';
+      }
+    }
+  }
+
   onSubmit(): void {
     if (this.loginForm.valid) {
+      this.errorMessage = '';
+      this.successMessage = '';
+      this.requiresVerification = false;
+
       this.authService.login(this.loginForm.value).subscribe({
         next: () => {
           this.userMetricsService.checkSetupStatus().subscribe({
@@ -45,8 +69,38 @@ export class LoginComponent {
             }
           });
         },
-        error: (err) => this.errorMessage = err.error?.message || 'Login failed'
+        error: (err) => {
+          if (err.error?.requiresVerification) {
+            this.requiresVerification = true;
+            this.errorMessage = err.error.message;
+          } else {
+            this.errorMessage = err.error?.message || 'Login failed';
+          }
+        }
       });
     }
+  }
+
+  resendVerificationEmail(): void {
+    const email = this.loginForm.get('email')?.value;
+    if (!email) {
+      this.errorMessage = 'Please enter your email address';
+      return;
+    }
+
+    this.resendingEmail = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.authService.resendVerification({ email }).subscribe({
+      next: (response) => {
+        this.successMessage = response.message;
+        this.resendingEmail = false;
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Failed to resend verification email';
+        this.resendingEmail = false;
+      }
+    });
   }
 }

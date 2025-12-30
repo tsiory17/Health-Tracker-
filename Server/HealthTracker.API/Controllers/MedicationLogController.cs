@@ -103,6 +103,23 @@ public class MedicationLogController : ControllerBase
     }
 
     /// <summary>
+    /// Get user's current date in their timezone
+    /// GET /api/medication-logs/user-today
+    /// </summary>
+    [HttpGet("user-today")]
+    public async Task<IActionResult> GetUserToday()
+    {
+        var userId = GetUserIdFromClaims();
+        if (!userId.HasValue)
+        {
+            return Unauthorized("User ID not found in token");
+        }
+
+        var userToday = await _medicationService.GetUserTodayAsync(userId.Value);
+        return Ok(new { date = userToday.ToString("yyyy-MM-dd") });
+    }
+
+    /// <summary>
     /// Helper method to extract user ID from JWT claims
     /// </summary>
     private int? GetUserIdFromClaims()

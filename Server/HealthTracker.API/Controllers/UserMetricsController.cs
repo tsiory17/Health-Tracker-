@@ -37,6 +37,30 @@ public class UserMetricsController : ControllerBase
         return Ok(userMetrics);
     }
 
+    [HttpPut]
+    public async Task<IActionResult> UpdateUserMetrics([FromBody] UserMetricsRequest request)
+    {
+        var validationError = ValidateUserMetrics(request);
+        if (validationError != null)
+        {
+            return BadRequest(new { message = validationError });
+        }
+
+        var userId = GetUserIdFromClaims();
+        if (userId == null)
+        {
+            return Unauthorized(new { message = "Invalid token" });
+        }
+
+        var userMetrics = await _userMetricsService.UpdateUserMetricsAsync(request, userId.Value);
+        if (userMetrics == null)
+        {
+            return NotFound(new { message = "User metrics not found" });
+        }
+
+        return Ok(userMetrics);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetUserMetrics()
     {
@@ -66,6 +90,19 @@ public class UserMetricsController : ControllerBase
 
         var hasCompleted = await _userMetricsService.HasCompletedSetupAsync(userId.Value);
         return Ok(new { hasCompletedSetup = hasCompleted });
+    }
+
+    [HttpGet("history")]
+    public async Task<IActionResult> GetUserMetricsHistory()
+    {
+        var userId = GetUserIdFromClaims();
+        if (userId == null)
+        {
+            return Unauthorized(new { message = "Invalid token" });
+        }
+
+        var history = await _userMetricsService.GetUserMetricsHistoryAsync(userId.Value);
+        return Ok(history);
     }
 
     private int? GetUserIdFromClaims()

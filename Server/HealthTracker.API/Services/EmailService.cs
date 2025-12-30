@@ -53,6 +53,33 @@ public class EmailService : IEmailService
         }
     }
 
+    public async Task<bool> SendPasswordResetEmailAsync(string toEmail, string username, string resetToken)
+    {
+        try
+        {
+            var frontendUrl = _configuration["AppSettings:FrontendUrl"] ?? "http://localhost:4200";
+            var encodedToken = Uri.EscapeDataString(resetToken);
+            var encodedEmail = Uri.EscapeDataString(toEmail);
+            var resetLink = $"{frontendUrl}/reset-password?token={encodedToken}&email={encodedEmail}";
+            var expiryMinutes = _configuration["AppSettings:PasswordResetTokenExpiryMinutes"] ?? "30";
+
+            var templatePath = Path.Combine(_environment.ContentRootPath, "Templates", "PasswordResetEmailTemplate.html");
+            var htmlTemplate = await File.ReadAllTextAsync(templatePath);
+
+            var htmlBody = htmlTemplate
+                .Replace("{USERNAME}", username)
+                .Replace("{RESET_LINK}", resetLink)
+                .Replace("{EXPIRY_HOURS}", expiryMinutes);
+
+            return await SendEmailAsync(toEmail, "Password Reset Request - Health Tracker", htmlBody);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error sending password reset email to {Email}", toEmail);
+            return false;
+        }
+    }
+
     public async Task<bool> SendEmailAsync(string toEmail, string subject, string htmlBody)
     {
         try

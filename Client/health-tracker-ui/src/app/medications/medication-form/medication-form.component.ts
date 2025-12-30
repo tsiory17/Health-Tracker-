@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MedicationService } from '../../shared/services/medication.service';
 import { DOSAGE_UNITS, FREQUENCIES } from '../models/medication-form.constants';
 import { parseDosage, combineDosage } from '../models/medication.utils';
-import { formatDateForInput } from '../../shared/utils/date.utils';
+import { formatDateForInput, formatDateToLocalISO } from '../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-medication-form',
@@ -19,9 +19,23 @@ export class MedicationFormComponent implements OnInit {
   errorMessage = '';
   isEditMode = false;
   medicationId: number | null = null;
+  doseTimes: string[] = ['09:00']; // Default to one dose time at 9:00 AM
 
   readonly dosageUnits = DOSAGE_UNITS;
   readonly frequencies = FREQUENCIES;
+  readonly quickDurationOptions = [
+    { value: 3, label: '3 days' },
+    { value: 5, label: '5 days' },
+    { value: 7, label: '7 days' },
+    { value: 10, label: '10 days' },
+    { value: 14, label: '14 days' },
+    { value: 21, label: '21 days' },
+    { value: 30, label: '30 days' },
+    { value: 60, label: '60 days' },
+    { value: 90, label: '90 days' },
+    { value: 180, label: '180 days' },
+    { value: 365, label: '365 days' }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -34,10 +48,36 @@ export class MedicationFormComponent implements OnInit {
       dosageAmount: ['', [Validators.required, Validators.min(0.01)]],
       dosageUnit: ['mg', [Validators.required]],
       frequency: ['Once daily', [Validators.required]],
-      startDate: [formatDateForInput(new Date()), [Validators.required]],
-      endDate: [''],
-      notes: ['', [Validators.maxLength(500)]]
+      startDate: [formatDateForInput(new Date()), [Validators.required, this.noPastDateValidator]],
+      durationDays: ['', [Validators.min(1), Validators.max(365)]],
+      notes: ['', [Validators.maxLength(5000)]] // Increased to 5000 for AI-generated recommendations
     });
+  }
+
+  // Method to set duration from quick select dropdown
+  setQuickDuration(days: number): void {
+    this.medicationForm.patchValue({ durationDays: days });
+  }
+
+  // Custom validator to prevent past dates
+  private noPastDateValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
+
+    // Parse the date string (YYYY-MM-DD) as a local date
+    const dateString = control.value;
+    const [year, month, day] = dateString.split('-').map(Number);
+    const selectedDate = new Date(year, month - 1, day); // month is 0-indexed
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+      return { pastDate: true };
+    }
+
+    return null;
   }
 
   ngOnInit(): void {
@@ -54,13 +94,34 @@ export class MedicationFormComponent implements OnInit {
       next: (medication) => {
         const { amount, unit } = parseDosage(medication.dosage);
 
+        // Parse dose times if available
+        if (medication.doseTimes) {
+          try {
+            this.doseTimes = JSON.parse(medication.doseTimes);
+          } catch {
+            this.doseTimes = ['09:00']; // Default if parsing fails
+          }
+        }
+
+        // Calculate duration days if end date exists
+        let durationDays = '';
+        if (medication.endDate) {
+          const startDate = new Date(medication.startDate);
+          const endDate = new Date(medication.endDate);
+          startDate.setHours(0, 0, 0, 0);
+          endDate.setHours(0, 0, 0, 0);
+          const diffTime = endDate.getTime() - startDate.getTime();
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          durationDays = diffDays.toString();
+        }
+
         this.medicationForm.patchValue({
           name: medication.name,
           dosageAmount: amount,
           dosageUnit: unit,
           frequency: medication.frequency,
           startDate: formatDateForInput(new Date(medication.startDate)),
-          endDate: medication.endDate ? formatDateForInput(new Date(medication.endDate)) : '',
+          durationDays: durationDays,
           notes: medication.notes || ''
         });
       },
@@ -77,13 +138,28 @@ export class MedicationFormComponent implements OnInit {
       // Combine dosageAmount + dosageUnit into single dosage string
       const dosage = combineDosage(formValue.dosageAmount, formValue.dosageUnit);
 
+      // Filter out empty dose times and convert to JSON
+      const validDoseTimes = this.doseTimes.filter(time => time && time.trim() !== '');
+      const doseTimesJson = validDoseTimes.length > 0 ? JSON.stringify(validDoseTimes) : null;
+
+      // Calculate end date from start date + duration days (only date, no time)
+      let endDate = null;
+      if (formValue.durationDays && formValue.durationDays !== '') {
+        const durationDays = parseInt(formValue.durationDays, 10);
+        const [year, month, day] = formValue.startDate.split('-').map(Number);
+        const startDateObj = new Date(year, month - 1, day); // Create local date at midnight
+        startDateObj.setDate(startDateObj.getDate() + durationDays); // Add duration days
+        endDate = formatDateToLocalISO(formatDateForInput(startDateObj));
+      }
+
       const medicationPayload = {
         name: formValue.name,
         dosage: dosage,
         frequency: formValue.frequency,
-        startDate: new Date(formValue.startDate).toISOString(),
-        endDate: formValue.endDate ? new Date(formValue.endDate).toISOString() : null,
-        notes: formValue.notes || null
+        startDate: formatDateToLocalISO(formValue.startDate),
+        endDate: endDate,
+        notes: formValue.notes || null,
+        doseTimes: doseTimesJson
       };
 
       if (this.isEditMode && this.medicationId) {
@@ -102,5 +178,19 @@ export class MedicationFormComponent implements OnInit {
 
   onCancel(): void {
     this.router.navigate(['/medications']);
+  }
+
+  addDoseTime(): void {
+    this.doseTimes.push('09:00'); // Add a new time slot with default value
+  }
+
+  removeDoseTime(index: number): void {
+    if (this.doseTimes.length > 1) {
+      this.doseTimes.splice(index, 1);
+    }
+  }
+
+  updateDoseTime(index: number, value: string): void {
+    this.doseTimes[index] = value;
   }
 }

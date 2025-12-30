@@ -1,97 +1,172 @@
-<div class="min-h-screen flex items-center justify-center bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-slate-100">
-    <div class="text-center">
-      <div class="mx-auto h-12 w-12 bg-emerald-100 rounded-xl flex items-center justify-center mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-emerald-600">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+<div class="login-container">
+  <!-- Left Panel - Illustration & Branding -->
+  <div class="left-panel">
+    <div class="illustration-wrapper">
+      <!-- Health-themed illustration -->
+      <div class="health-illustration">
+        <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background circles -->
+          <circle cx="250" cy="250" r="200" fill="#e8f5e9" opacity="0.5"/>
+          <circle cx="250" cy="250" r="150" fill="#c8e6c9" opacity="0.3"/>
+
+          <!-- Heart with pulse line -->
+          <path d="M250 180 C250 180, 220 150, 190 150 C160 150, 140 170, 140 200 C140 240, 250 320, 250 320 C250 320, 360 240, 360 200 C360 170, 340 150, 310 150 C280 150, 250 180, 250 180 Z"
+                fill="#66bb6a" opacity="0.9"/>
+
+          <!-- Pulse line -->
+          <path d="M150 250 L200 250 L220 230 L240 270 L260 220 L280 260 L300 240 L350 240"
+                stroke="#4caf50" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.8">
+            <animate attributeName="stroke-dasharray" from="0,200" to="200,0" dur="2s" repeatCount="indefinite"/>
+          </path>
+
+          <!-- Medical cross -->
+          <g transform="translate(380, 150)">
+            <rect x="-8" y="-24" width="16" height="48" fill="#81c784" rx="4"/>
+            <rect x="-24" y="-8" width="48" height="16" fill="#81c784" rx="4"/>
+          </g>
+
+          <!-- Pills -->
+          <g transform="translate(120, 380)">
+            <ellipse cx="0" cy="0" rx="25" ry="15" fill="#a5d6a7" transform="rotate(-20)"/>
+            <ellipse cx="50" cy="10" rx="25" ry="15" fill="#c8e6c9" transform="rotate(15)"/>
+          </g>
+
+          <!-- Stethoscope -->
+          <g transform="translate(400, 350)">
+            <path d="M0 0 Q-20 30, -10 50 L10 50 Q20 30, 0 0" stroke="#66bb6a" stroke-width="3" fill="none"/>
+            <circle cx="0" cy="0" r="8" fill="#4caf50"/>
+            <circle cx="-10" cy="50" r="12" fill="#81c784"/>
+            <circle cx="10" cy="50" r="12" fill="#81c784"/>
+          </g>
+
+          <!-- Activity graph -->
+          <g transform="translate(80, 100)">
+            <polyline points="0,30 15,20 30,25 45,10 60,15" stroke="#a5d6a7" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <circle cx="0" cy="30" r="4" fill="#66bb6a"/>
+            <circle cx="15" cy="20" r="4" fill="#66bb6a"/>
+            <circle cx="30" cy="25" r="4" fill="#66bb6a"/>
+            <circle cx="45" cy="10" r="4" fill="#66bb6a"/>
+            <circle cx="60" cy="15" r="4" fill="#66bb6a"/>
+          </g>
         </svg>
       </div>
-      <h2 class="text-3xl font-bold tracking-tight text-slate-900">Welcome back</h2>
-      <p class="mt-2 text-sm text-slate-600">Please sign in to your account</p>
-    </div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
+      <div class="brand-content">
+        <h1>Health Tracker</h1>
+        <p>Your personal health companion for tracking medications, vitals, and wellness journey</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel - Login Form -->
+  <div class="right-panel">
+    <div class="form-container">
+      <div class="form-header">
+        <div class="logo-mark">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </div>
+        <h2>HEALTH TRACKER</h2>
+      </div>
+
+      <!-- Success Message -->
+      @if (successMessage) {
+        <div class="alert alert-success">
+          <svg viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          </svg>
+          <div class="alert-content">{{ successMessage }}</div>
+        </div>
+      }
+
+      <!-- Error Message -->
       @if (errorMessage) {
-        <div class="rounded-lg bg-red-50 p-4 border-l-4 border-red-500">
-          <div class="flex">
-            <div class="flex-shrink-0">
-              <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-              </svg>
-            </div>
-            <div class="ml-3">
-              <p class="text-sm text-red-700">{{ errorMessage }}</p>
-            </div>
+        <div class="alert alert-error">
+          <svg viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+          <div class="alert-content">
+            {{ errorMessage }}
+            @if (requiresVerification) {
+              <button
+                type="button"
+                class="resend-button"
+                (click)="resendVerificationEmail()"
+                [disabled]="resendingEmail"
+              >
+                {{ resendingEmail ? 'Sending...' : 'Resend verification email' }}
+              </button>
+            }
           </div>
         </div>
       }
 
-      <div class="space-y-5">
-        <div>
-          <label for="email" class="block text-sm font-medium text-slate-700">Email address</label>
-          <div class="mt-1 relative rounded-md shadow-sm">
-             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-              </svg>
-            </div>
+      <!-- Login Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email">Username or email</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+            </svg>
             <input
               id="email"
               type="email"
               formControlName="email"
-              class="block w-full pl-10 pr-3 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm placeholder-slate-400 transition-all outline-none"
-              placeholder="you@example.com"
+              placeholder="johnsmith007"
             />
           </div>
           @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-             <p class="mt-2 text-xs text-red-500 flex items-center gap-1">
-               <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-               Valid email is required
-             </p>
+            <div class="error-message">
+              <svg fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+              Valid email is required
+            </div>
           }
         </div>
 
-        <div>
-          <label for="password" class="block text-sm font-medium text-slate-700">Password</label>
-          <div class="mt-1 relative rounded-md shadow-sm">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            </div>
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
             <input
               id="password"
               type="password"
               formControlName="password"
-              class="block w-full pl-10 pr-3 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm placeholder-slate-400 transition-all outline-none"
-              placeholder="••••••••"
+              placeholder="••••••••••"
             />
           </div>
           @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-             <p class="mt-2 text-xs text-red-500 flex items-center gap-1">
-               <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-               Password must be at least 6 characters
-             </p>
+            <div class="error-message">
+              <svg fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+              Password must be at least 6 characters
+            </div>
           }
         </div>
-      </div>
 
-      <div>
-        <button
-          type="submit"
-          [disabled]="loginForm.invalid"
-          class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:bg-slate-300 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
-        >
+        <!-- Forgot Password -->
+        <div class="forgot-password">
+          <a routerLink="/forgot-password">Forgot password?</a>
+        </div>
+
+        <!-- Sign In Button -->
+        <button type="submit" class="btn-primary" [disabled]="loginForm.invalid">
           Sign in
         </button>
-      </div>
-    </form>
+      </form>
 
-    <div class="mt-6 text-center">
-      <p class="text-sm text-slate-500">
-        Don't have an account?
-        <a routerLink="/register" class="font-medium text-emerald-600 hover:text-emerald-500 transition-colors">Sign up now</a>
-      </p>
+      <!-- Sign Up Link -->
+      <div class="signup-link">
+        Are you new? <a routerLink="/register">Create an Account</a>
+      </div>
     </div>
   </div>
 </div>

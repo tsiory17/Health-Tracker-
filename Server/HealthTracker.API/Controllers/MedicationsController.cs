@@ -5,6 +5,7 @@ using HealthTracker.API.Models;
 using HealthTracker.API.Repositories;
 using HealthTracker.API.DTOs;
 using HealthTracker.API.Validations;
+using HealthTracker.API.Jobs;
 
 namespace HealthTracker.API.Controllers;
 
@@ -14,10 +15,12 @@ namespace HealthTracker.API.Controllers;
 public class MedicationsController : ControllerBase
 {
     private readonly IMedicationService _medicationService;
+    private readonly IServiceProvider _serviceProvider;
 
-    public MedicationsController(IMedicationService medicationService)
+    public MedicationsController(IMedicationService medicationService, IServiceProvider serviceProvider)
     {
         _medicationService = medicationService;
+        _serviceProvider = serviceProvider;
     }
 
     /// <summary>
@@ -95,10 +98,22 @@ public class MedicationsController : ControllerBase
             Frequency = request.Frequency,
             StartDate = request.StartDate,
             EndDate = request.EndDate,
-            Notes = request.Notes
+            Notes = request.Notes,
+            DoseTimes = request.DoseTimes
         };
 
         var createdMedication = await _medicationService.CreateMedicationAsync(medication);
+
+        // Fire-and-forget background job for AI recommendations
+        _ = Task.Run(async () =>
+        {
+            await MedicationRecommendationJob.ProcessMedicationRecommendationsAsync(
+                createdMedication.MedicationId,
+                userId.Value,
+                _serviceProvider
+            );
+        });
+
         return CreatedAtAction(
             nameof(GetMedicationById),
             new { id = createdMedication.MedicationId },
@@ -124,6 +139,17 @@ public class MedicationsController : ControllerBase
             return BadRequest(new { message = validationError });
         }
 
+        // Get existing medication to check if name or dosage changed
+        var existingMedication = await _medicationService.GetMedicationByIdAsync(id, userId.Value);
+        if (existingMedication == null)
+        {
+            return NotFound(new { message = "Medication not found" });
+        }
+
+        // Check if name or dosage changed (triggers AI regeneration)
+        bool shouldRegenerateAI = existingMedication.Name != request.Name ||
+                                   existingMedication.Dosage != request.Dosage;
+
         // Check for duplicate medication (same name and dosage - case insensitive)
         // Exclude the current medication being updated
         var isDuplicate = await _medicationService.IsDuplicateMedicationAsync(
@@ -138,22 +164,32 @@ public class MedicationsController : ControllerBase
             return BadRequest(new { message = "A medication with the same name and dosage already exists" });
         }
 
-        var medication = new Medication
-        {
-            MedicationId = id,
-            UserId = userId.Value,
-            Name = request.Name,
-            Dosage = request.Dosage,
-            Frequency = request.Frequency,
-            StartDate = request.StartDate,
-            EndDate = request.EndDate,
-            Notes = request.Notes
-        };
+        // Update the existing medication properties
+        existingMedication.Name = request.Name;
+        existingMedication.Dosage = request.Dosage;
+        existingMedication.Frequency = request.Frequency;
+        existingMedication.StartDate = request.StartDate;
+        existingMedication.EndDate = request.EndDate;
+        existingMedication.Notes = request.Notes;
+        existingMedication.DoseTimes = request.DoseTimes;
 
-        var success = await _medicationService.UpdateMedicationAsync(medication, userId.Value);
+        var success = await _medicationService.UpdateMedicationAsync(existingMedication, userId.Value);
         if (!success)
         {
             return NotFound(new { message = "Medication not found" });
+        }
+
+        // Fire-and-forget AI recommendations if name or dosage changed
+        if (shouldRegenerateAI)
+        {
+            _ = Task.Run(async () =>
+            {
+                await MedicationRecommendationJob.ProcessMedicationRecommendationsAsync(
+                    id,
+                    userId.Value,
+                    _serviceProvider
+                );
+            });
         }
 
         return Ok(new { message = "Medication updated successfully" });

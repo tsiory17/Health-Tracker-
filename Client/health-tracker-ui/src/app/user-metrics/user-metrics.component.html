@@ -1,0 +1,114 @@
+<div class="p-6 max-w-6xl mx-auto">
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-slate-900">BMI Tracker</h1>
+    <p class="text-slate-600 mt-1">Monitor your body metrics and BMI progress</p>
+  </div>
+
+  @if (loading) {
+    <div class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+    </div>
+  }
+
+  @if (!loading && userMetrics) {
+    <div class="max-w-2xl mx-auto">
+      <!-- Metrics Card -->
+      <div class="bg-white rounded-xl shadow-md p-6 border border-slate-200">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold text-slate-900">Your Metrics</h2>
+          @if (!isEditing) {
+            <button
+              (click)="toggleEdit()"
+              class="px-4 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors">
+              Edit
+            </button>
+          }
+        </div>
+
+        @if (successMessage) {
+          <div class="mb-4 rounded-lg bg-emerald-50 p-4 border-l-4 border-emerald-500">
+            <p class="text-sm text-emerald-700">{{ successMessage }}</p>
+          </div>
+        }
+
+        @if (errorMessage) {
+          <div class="mb-4 rounded-lg bg-red-50 p-4 border-l-4 border-red-500">
+            <p class="text-sm text-red-700">{{ errorMessage }}</p>
+          </div>
+        }
+
+        <form [formGroup]="metricsForm" (ngSubmit)="onSubmit()" class="space-y-4">
+          <!-- Age (Read-only) -->
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Age</label>
+            <div class="px-4 py-3 bg-slate-100 border border-slate-300 rounded-lg text-slate-900">
+              {{ userMetrics.age }} years
+            </div>
+            <p class="mt-1 text-xs text-slate-500">Calculated automatically from your date of birth</p>
+          </div>
+
+          <!-- Height -->
+          <div>
+            <label for="height" class="block text-sm font-medium text-slate-700 mb-1">Height (cm)</label>
+            <input
+              id="height"
+              type="number"
+              formControlName="heightCm"
+              [readonly]="!isEditing"
+              [class.bg-slate-100]="!isEditing"
+              [class.bg-white]="isEditing"
+              class="block w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
+              placeholder="e.g. 175"
+            />
+            @if (metricsForm.get('heightCm')?.invalid && metricsForm.get('heightCm')?.touched) {
+              <p class="mt-1 text-xs text-red-500">Height must be positive</p>
+            }
+          </div>
+
+          <!-- Weight -->
+          <div>
+            <label for="weight" class="block text-sm font-medium text-slate-700 mb-1">Weight (kg)</label>
+            <input
+              id="weight"
+              type="number"
+              formControlName="weightKg"
+              [readonly]="!isEditing"
+              [class.bg-slate-100]="!isEditing"
+              [class.bg-white]="isEditing"
+              class="block w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
+              placeholder="e.g. 70"
+            />
+            @if (metricsForm.get('weightKg')?.invalid && metricsForm.get('weightKg')?.touched) {
+              <p class="mt-1 text-xs text-red-500">Weight must be positive</p>
+            }
+          </div>
+
+          <!-- BMI Display -->
+          <div class="pt-4 border-t border-slate-200">
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-medium text-slate-700">Current BMI</span>
+              <span class="text-2xl font-bold text-emerald-600">{{ calculateBMI().toFixed(1) }}</span>
+            </div>
+          </div>
+
+          @if (isEditing) {
+            <div class="flex gap-3 pt-4">
+              <button
+                type="submit"
+                [disabled]="metricsForm.invalid"
+                class="flex-1 px-4 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors">
+                Save Changes
+              </button>
+              <button
+                type="button"
+                (click)="toggleEdit()"
+                class="flex-1 px-4 py-3 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 transition-colors">
+                Cancel
+              </button>
+            </div>
+          }
+        </form>
+      </div>
+    </div>
+  }
+</div>
