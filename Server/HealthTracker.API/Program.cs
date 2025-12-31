@@ -78,8 +78,20 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngularApp", policy =>
     {
         // Support both local development and production
-        var frontendUrl = builder.Configuration["AppSettings:FrontendUrl"] ?? "http://localhost:4200";
-        policy.WithOrigins("http://localhost:4200", frontendUrl)
+        var allowedOrigins = new List<string>
+        {
+            "http://localhost:4200",
+            "https://health-tracker-tau-amber.vercel.app"
+        };
+
+        // Add configured frontend URL if present
+        var frontendUrl = builder.Configuration["AppSettings:FrontendUrl"];
+        if (!string.IsNullOrEmpty(frontendUrl) && !allowedOrigins.Contains(frontendUrl))
+        {
+            allowedOrigins.Add(frontendUrl);
+        }
+
+        policy.WithOrigins(allowedOrigins.ToArray())
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
