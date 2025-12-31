@@ -2,6 +2,10 @@ namespace HealthTracker.API.Models;
 
 public class EmailSettings
 {
+    // Brevo API settings
+    public string BrevoApiKey { get; set; } = string.Empty;
+
+    // SMTP settings (legacy - kept for local development)
     public string SmtpServer { get; set; } = string.Empty;
     public int SmtpPort { get; set; }
     public string SenderEmail { get; set; } = string.Empty;

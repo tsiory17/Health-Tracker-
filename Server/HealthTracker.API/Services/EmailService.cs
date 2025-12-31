@@ -1,9 +1,9 @@
-using MailKit.Net.Smtp;
-using MailKit.Security;
 using Microsoft.Extensions.Options;
-using MimeKit;
 using HealthTracker.API.Models;
 using HealthTracker.API.Repositories;
+using sib_api_v3_sdk.Api;
+using sib_api_v3_sdk.Client;
+using sib_api_v3_sdk.Model;
 
 namespace HealthTracker.API.Services;
 
@@ -84,33 +84,26 @@ public class EmailService : IEmailService
     {
         try
         {
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
-            message.To.Add(new MailboxAddress("", toEmail));
-            message.Subject = subject;
+            // Configure Brevo API
+            Configuration.Default.ApiKey["api-key"] = _emailSettings.BrevoApiKey;
 
-            var bodyBuilder = new BodyBuilder
+            var apiInstance = new TransactionalEmailsApi();
+            var sendSmtpEmail = new SendSmtpEmail
             {
-                HtmlBody = htmlBody
+                Sender = new SendSmtpEmailSender(_emailSettings.SenderName, _emailSettings.SenderEmail),
+                To = new List<SendSmtpEmailTo> { new SendSmtpEmailTo(toEmail) },
+                Subject = subject,
+                HtmlContent = htmlBody
             };
-            message.Body = bodyBuilder.ToMessageBody();
 
-            using var client = new SmtpClient();
-            client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-            
-            await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort,
-                _emailSettings.UseSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
+            var result = await apiInstance.SendTransacEmailAsync(sendSmtpEmail);
 
-            await client.AuthenticateAsync(_emailSettings.Username, _emailSettings.Password);
-            await client.SendAsync(message);
-            await client.DisconnectAsync(true);
-
-            _logger.LogInformation("Email sent successfully to {Email}", toEmail);
+            _logger.LogInformation("Email sent successfully to {Email} via Brevo. MessageId: {MessageId}", toEmail, result.MessageId);
             return true;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to send email to {Email}", toEmail);
+            _logger.LogError(ex, "Failed to send email to {Email} via Brevo", toEmail);
             return false;
         }
     }
