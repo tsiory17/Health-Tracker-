@@ -7,9 +7,12 @@ namespace HealthTracker.API.Jobs
     {
         public static async Task ProcessMedicationRecommendationsAsync(int medicationId, int userId, IServiceProvider serviceProvider)
         {
+            Console.WriteLine($"[DEBUG] ProcessMedicationRecommendationsAsync called for medication {medicationId}");
             try
             {
+                Console.WriteLine($"[DEBUG] Creating service scope for medication {medicationId}");
                 using var scope = serviceProvider.CreateScope();
+                Console.WriteLine($"[DEBUG] Service scope created successfully for medication {medicationId}");
                 var medicationService = scope.ServiceProvider.GetRequiredService<IMedicationService>();
                 var aiService = scope.ServiceProvider.GetRequiredService<IMedicationAiService>();
                 var notificationService = scope.ServiceProvider.GetRequiredService<IRealTimeNotificationService>();
