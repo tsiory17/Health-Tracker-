@@ -96,8 +96,8 @@ public class MedicationsController : ControllerBase
             Name = request.Name,
             Dosage = request.Dosage,
             Frequency = request.Frequency,
-            StartDate = request.StartDate,
-            EndDate = request.EndDate,
+            StartDate = DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc),
+            EndDate = request.EndDate.HasValue ? DateTime.SpecifyKind(request.EndDate.Value, DateTimeKind.Utc) : null,
             Notes = request.Notes,
             DoseTimes = request.DoseTimes
         };
@@ -168,8 +168,8 @@ public class MedicationsController : ControllerBase
         existingMedication.Name = request.Name;
         existingMedication.Dosage = request.Dosage;
         existingMedication.Frequency = request.Frequency;
-        existingMedication.StartDate = request.StartDate;
-        existingMedication.EndDate = request.EndDate;
+        existingMedication.StartDate = DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc);
+        existingMedication.EndDate = request.EndDate.HasValue ? DateTime.SpecifyKind(request.EndDate.Value, DateTimeKind.Utc) : null;
         existingMedication.Notes = request.Notes;
         existingMedication.DoseTimes = request.DoseTimes;
 
