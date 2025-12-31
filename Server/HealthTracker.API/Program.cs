@@ -148,11 +148,14 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 
 // Auto-run database migrations on startup (production-safe)
+// TEMPORARILY DISABLED - Will run migrations manually from local machine
+/*
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
 }
+*/
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
