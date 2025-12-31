@@ -18,9 +18,10 @@ public class UserMetricsService : IUserMetricsService
         var userMetrics = new UserMetrics
         {
             UserId = userId,
-            DateOfBirth = request.DateOfBirth,
+            DateOfBirth = DateTime.SpecifyKind(request.DateOfBirth, DateTimeKind.Utc),
             HeightCm = request.HeightCm,
-            WeightKg = request.WeightKg
+            WeightKg = request.WeightKg,
+            RecordedAt = DateTime.UtcNow
         };
 
         return await _userMetricsRepository.AddAsync(userMetrics);
@@ -38,7 +39,7 @@ public class UserMetricsService : IUserMetricsService
         var newMetrics = new UserMetrics
         {
             UserId = userId,
-            DateOfBirth = request.DateOfBirth,
+            DateOfBirth = DateTime.SpecifyKind(request.DateOfBirth, DateTimeKind.Utc),
             HeightCm = request.HeightCm,
             WeightKg = request.WeightKg,
             RecordedAt = DateTime.UtcNow
