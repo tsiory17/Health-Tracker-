@@ -4,6 +4,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { VerifyEmailComponent } from './auth/verify-email/verify-email.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import { ExplanationComponent } from './explanation/explanation.component';
 import { SetupComponent } from './setup/setup.component';
 import { HomeComponent } from './home/home.component';
 import { MedicationsComponent } from './medications/medications.component';
@@ -20,6 +21,7 @@ export const routes: Routes = [
   { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'explanation', component: ExplanationComponent },
   { path: 'setup', component: SetupComponent },
   { path: 'home', component: HomeComponent },
   { path: 'profile', component: ProfileComponent },

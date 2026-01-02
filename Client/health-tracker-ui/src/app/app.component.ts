@@ -118,8 +118,8 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private checkRoute(url: string) {
-    // Hide sidebar margin and navbar for login, register, setup, and verify-email pages
-    const authPages = ['/login', '/register', '/setup', '/verify-email', '/'];
+    // Hide sidebar margin and navbar for login, register, explanation, setup, and verify-email pages
+    const authPages = ['/login', '/register', '/explanation', '/setup', '/verify-email', '/'];
     const isAuthPage = authPages.some(path => {
       if (path === '/') {
         return url === '/' || url === '';

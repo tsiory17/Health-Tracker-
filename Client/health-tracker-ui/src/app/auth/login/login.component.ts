@@ -61,11 +61,11 @@ export class LoginComponent implements OnInit {
               if (response.hasCompletedSetup) {
                 this.router.navigate(['/home']);
               } else {
-                this.router.navigate(['/setup']);
+                this.router.navigate(['/explanation']);
               }
             },
             error: () => {
-              this.router.navigate(['/setup']);
+              this.router.navigate(['/explanation']);
             }
           });
         },
