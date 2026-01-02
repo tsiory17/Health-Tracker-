@@ -1,164 +1,187 @@
-# Health & Medication Tracker
+# Health Tracker
 
-A full-stack application designed to help users track medications, daily doses, and health vitals to improve medication adherence and provide simple health monitoring.
+> **Never forget to take your medication again** - Your personal medication tracking companion with smart reminders and comprehensive health monitoring.
 
-## Table of Contents
+A full-stack web application that helps users track medications, manage daily doses with real-time reminders, and monitor health vitals. Built with ASP.NET Core and Angular.
 
-- [Goal](#goal)
-- [Features](#features)
-- [Technologies](#technologies)
-- [Architecture](#architecture)
-- [Installation & Setup](#installation--setup)
-- [How It Works](#how-it-works)
-- [Database Schema](#database-schema)
-- [API Endpoints](#api-endpoints)
-- [Future Improvements](#future-improvements)
 
-## Goal
-
-The project helps users:
-- Track medications and daily doses
-- Improve medication adherence through scheduled reminders
-- Monitor health vitals (blood pressure, heart rate, weight)
-- View historical health data with visualizations
-- (Optional) Extract medication data from prescription PDFs using AI
+![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)
+![Angular](https://img.shields.io/badge/Angular-17-red.svg)
 
 ## Features
 
-### Core Features
-- **User Authentication**: Secure register/login system with JWT tokens
-- **Medication Management**: Add, edit, and delete medications with dosage schedules
-- **Daily Dose Schedule**: View and mark medications as taken throughout the day
-- **Vitals Tracking**: Record blood pressure, heart rate, and weight measurements
-- **Vitals History Chart**: Visualize health trends over time using Chart.js
+### Authentication & Security
+- **Email Verification**: Secure account creation with email confirmation
+- **JWT Authentication**: Token-based secure authentication
+- **Password Recovery**: Forgot password and reset functionality
+- **Profile Management**: User profile with timezone settings
 
-### Optional Advanced Feature
-- **Prescription PDF Upload**: Upload prescription PDFs and use AI (GPT/Claude API) to automatically extract medication information
+### Medication Management
+- **Medication CRUD**: Add, edit, delete, and view medications
+- **Dose Scheduling**: Automatic dose scheduling based on frequency
+- **Medication Calendar**: Interactive calendar view powered by FullCalendar
+- **Today's Doses**: Daily medication schedule with easy tracking
+- **Real-time Reminders**: SignalR-powered real-time notifications for upcoming doses
+- **Missed Dose Alerts**: Background service tracks and notifies about missed medications
+- **Detailed Medication View**: Modal with comprehensive medication information
 
-## Technologies
+### Health Monitoring
+- **Vitals Tracking**: Record blood pressure, heart rate, and weight
+- **BMI Calculator**: Automatic BMI calculation and tracking
+- **Health Metrics**: User metrics with initial setup wizard
+- **Data Visualization**: Chart.js powered charts for health trends
 
-### Backend
-- **ASP.NET Core Web API** (C#) - RESTful API
-- **Entity Framework Core** - ORM for database access
-- **Microsoft SQL Server** - Database
-- **JWT Authentication** - Secure token-based authentication
-
-### Frontend
-- **Angular** - Single-page application framework
-- **Chart.js** - Data visualization for vitals history
-- **TypeScript** - Type-safe development
+### User Experience
+- **Welcome Flow**: Onboarding explanation page for new users
+- **Initial Setup**: Guided setup for user health metrics (DOB, height, weight)
+- **Responsive Design**: Mobile-first design with Tailwind CSS
+- **Toast Notifications**: Real-time feedback with ngx-toastr
+- **Dark Mode Ready**: Beautiful gradient backgrounds and modern UI
 
 ### AI Integration (Optional)
-- **GPT/Claude API** - Prescription text extraction
+- **Prescription Extraction**: AI-powered medication data extraction from prescription PDFs
+- **Smart Data Entry**: Pre-fill medication forms from uploaded prescriptions
 
-## Architecture
+## Technology Stack
 
-The project follows Clean Architecture principles with clear separation of concerns:
+### Backend
+- **Framework**: ASP.NET Core 9.0 Web API (C#)
+- **ORM**: Entity Framework Core
+- **Database**: PostgreSQL (with SQL Server support)
+- **Authentication**: JWT Bearer tokens
+- **Real-time**: SignalR for live notifications
+- **Background Jobs**: Hosted background services for reminders
+- **Email**: SMTP email service for verification and notifications
 
-### Backend Structure
+### Frontend
+- **Framework**: Angular 17 (Standalone Components)
+- **Styling**: Tailwind CSS 3.4
+- **UI Components**: Custom components with modern design
+- **Charts**: Chart.js for data visualization
+- **Calendar**: FullCalendar for medication scheduling
+- **Date Handling**: date-fns for date manipulation
+- **Notifications**: ngx-toastr for toast notifications
+- **Real-time**: SignalR client for live updates
+- **HTTP**: RxJS for reactive programming
 
-```
-HealthTracker.API/          # Web API Layer
-├── Controllers/            # API endpoints
-│   ├── AuthController
-│   ├── MedicationsController
-│   ├── VitalsController
-│   └── PrescriptionController (optional)
-└── Program.cs
+### Development Tools
+- **Language**: TypeScript 5.4
+- **Build Tool**: Angular CLI
+- **CSS Preprocessor**: PostCSS with Autoprefixer
+- **Testing**: Jasmine & Karma
 
-HealthTracker.Core/         # Domain Layer
-├── Entities/              # Domain models
-│   ├── User
-│   ├── Medication
-│   ├── MedicationDose
-│   └── Vital
-└── Interfaces/            # Repository interfaces
-
-HealthTracker.Services/     # Business Logic Layer
-├── AuthService            # Authentication & JWT generation
-├── MedicationService      # Medication CRUD & scheduling
-├── VitalsService          # Vitals tracking
-└── PrescriptionService    # AI PDF extraction (optional)
-
-HealthTracker.Infrastructure/  # Data Access Layer
-├── Data/
-│   └── ApplicationDbContext
-└── Repositories/
-    └── Repository<T>      # Generic repository pattern
-```
-
-### Frontend Structure
+## Project Structure
 
 ```
-health-tracker-ui/
-├── src/app/
-│   ├── auth/              # Authentication module
-│   │   ├── login/
-│   │   └── register/
-│   ├── dashboard/         # Dashboard module
-│   ├── medications/       # Medications module
-│   │   ├── medication-list/
-│   │   └── medication-form/
-│   ├── vitals/           # Vitals module
-│   │   ├── vitals-form/
-│   │   └── vitals-chart/
-│   ├── prescription/     # Prescription upload (optional)
-│   └── shared/
-│       ├── models/       # TypeScript interfaces
-│       ├── services/     # HTTP services
-│       ├── guards/       # Route guards
-│       └── interceptors/ # HTTP interceptors
+Health-Tracker-/
+├── Server/
+│   └── HealthTracker.API/
+│       ├── Controllers/
+│       │   ├── AuthController.cs
+│       │   ├── MedicationsController.cs
+│       │   ├── MedicationLogController.cs
+│       │   ├── VitalsController.cs
+│       │   ├── UserMetricsController.cs
+│       │   └── HealthController.cs
+│       ├── Jobs/
+│       │   ├── MissedDoseNotificationBackgroundService.cs
+│       │   └── UpcomingReminderBackgroundService.cs
+│       ├── Hubs/
+│       │   └── NotificationHub.cs (SignalR)
+│       ├── Models/
+│       ├── Repositories/
+│       └── Services/
+│
+└── Client/
+    └── health-tracker-ui/
+        └── src/app/
+            ├── auth/
+            │   ├── login/
+            │   ├── register/
+            │   ├── verify-email/
+            │   ├── forgot-password/
+            │   └── reset-password/
+            ├── explanation/         # Onboarding welcome
+            ├── setup/               # Initial user setup
+            ├── home/                # Main dashboard
+            ├── medications/
+            │   ├── medications.component (list view)
+            │   ├── medication-form/
+            │   ├── medication-detail-modal/
+            │   ├── medication-calendar/
+            │   └── today/           # Today's dose schedule
+            ├── vitals/
+            │   └── vitals-form/
+            ├── user-metrics/        # BMI & health metrics
+            ├── profile/             # User profile settings
+            ├── prescription/        # AI prescription upload
+            └── shared/
+                ├── navbar/
+                ├── footer/
+                ├── services/
+                ├── models/
+                └── timezone-update-dialog/
 ```
 
-## Installation & Setup
+## Getting Started
 
 ### Prerequisites
-- [.NET 9.0 SDK](https://dotnet.microsoft.com/download)
-- [Node.js](https://nodejs.org/) (v18+)
-- [Angular CLI](https://angular.io/cli) (`npm install -g @angular/cli`)
-- [Microsoft SQL Server](https://www.microsoft.com/sql-server)
+
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- [Angular CLI](https://angular.io/cli): `npm install -g @angular/cli`
+- [PostgreSQL](https://www.postgresql.org/download/) or [SQL Server](https://www.microsoft.com/sql-server)
+- SMTP Email Server (Gmail, SendGrid, etc.) for email features
 
 ### Backend Setup
 
-1. **Clone the repository**
+1. **Navigate to the backend directory**
    ```bash
-   git clone <repository-url>
-   cd Health-Tracker-
+   cd Server/HealthTracker.API
    ```
 
-2. **Update database connection string**
+2. **Configure database connection**
 
-   Edit `HealthTracker.API/appsettings.json`:
+   Edit `appsettings.json`:
    ```json
    {
      "ConnectionStrings": {
-       "DefaultConnection": "Server=localhost;Database=HealthTrackerDb;Trusted_Connection=True;"
+       "DefaultConnection": "Host=localhost;Database=HealthTrackerDb;Username=your_user;Password=your_password"
      }
    }
    ```
 
-3. **Create and run database migrations**
-   ```bash
-   cd HealthTracker.API
+3. **Configure email settings**
 
-   # Create initial migration (DbContext is in Infrastructure project)
-   dotnet ef migrations add InitialCreate --project ../HealthTracker.Infrastructure
-
-   # Apply migration to database
-   dotnet ef database update --project ../HealthTracker.Infrastructure
+   Add to `appsettings.json`:
+   ```json
+   {
+     "EmailSettings": {
+       "SmtpServer": "smtp.gmail.com",
+       "SmtpPort": 587,
+       "SenderEmail": "your-email@gmail.com",
+       "SenderPassword": "your-app-password"
+     }
+   }
    ```
 
-4. **Run the API**
+4. **Run database migrations**
+   ```bash
+   dotnet ef database update
+   ```
+
+5. **Run the API**
    ```bash
    dotnet run
    ```
-   The API will be available at `http://localhost:5000`
+
+   API will be available at `https://localhost:7000` (or configured port)
 
 ### Frontend Setup
 
-1. **Navigate to frontend directory**
+1. **Navigate to the frontend directory**
    ```bash
-   cd health-tracker-ui
+   cd Client/health-tracker-ui
    ```
 
 2. **Install dependencies**
@@ -166,131 +189,169 @@ health-tracker-ui/
    npm install
    ```
 
-3. **Update API URL** (if different from default)
+3. **Configure API URL**
 
-   Edit service files in `src/app/shared/services/` to match your API URL
+   Edit `src/environments/environment.ts`:
+   ```typescript
+   export const environment = {
+     production: false,
+     apiUrl: 'https://localhost:7000/api'
+   };
+   ```
 
 4. **Run the development server**
    ```bash
    ng serve
    ```
-   The application will be available at `http://localhost:4200`
+
+   Navigate to `http://localhost:4200`
 
 ## How It Works
 
-### User Flow
+### User Journey
 
-1. **Registration & Login**
-   - User creates an account with username, email, and password
-   - System generates JWT token upon successful authentication
-   - Token is stored in browser's localStorage
+1. **Registration & Verification**
+   - User registers with email, username, and password
+   - Email verification link sent to user's inbox
+   - User verifies email and logs in
+   - JWT token generated and stored
 
-2. **Medication Management**
-   - User adds medications with details (name, dosage, frequency, dates)
-   - System automatically generates dose schedule based on frequency
-   - Dashboard displays today's medication schedule
+2. **Initial Setup**
+   - Welcome explanation page introduces app features
+   - User completes health metrics setup (DOB, height, weight)
+   - BMI automatically calculated
 
-3. **Dose Tracking**
-   - User views daily medication schedule
-   - User marks doses as taken with a single click
-   - System records the exact time medication was taken
+3. **Medication Management**
+   - Add medications with name, dosage, frequency, and dates
+   - System auto-generates dose schedule
+   - View medications in list, calendar, or today's view
+   - Receive real-time reminders via SignalR
 
-4. **Vitals Monitoring**
-   - User logs health vitals (blood pressure, heart rate, weight)
-   - Data is timestamped and stored in the database
-   - Charts display historical trends for each vital sign
+4. **Daily Tracking**
+   - View today's medication schedule
+   - Mark doses as taken with one click
+   - System records exact timestamp
+   - Background service monitors missed doses
 
-5. **AI Prescription Extraction (Optional)**
-   - User uploads prescription PDF
-   - AI extracts medication details (name, dosage, frequency)
-   - User reviews and edits extracted data before saving
+5. **Health Monitoring**
+   - Log vitals (blood pressure, heart rate, weight)
+   - Track BMI changes over time
+   - View health trends with interactive charts
+
+6. **Real-time Notifications**
+   - Receive browser notifications for upcoming doses
+   - Get alerts for missed medications
+   - All notifications powered by SignalR
 
 ## Database Schema
 
-### Users Table
-| Column        | Type         | Description                |
-|---------------|--------------|----------------------------|
-| UserId        | INT          | Primary Key                |
-| Username      | NVARCHAR(100)| User's display name        |
-| Email         | NVARCHAR(255)| Unique email (login)       |
-| PasswordHash  | NVARCHAR(MAX)| Hashed password           |
-| CreatedAt     | DATETIME     | Account creation timestamp |
+### Key Tables
 
-### Medications Table
-| Column        | Type         | Description                |
-|---------------|--------------|----------------------------|
-| MedicationId  | INT          | Primary Key                |
-| UserId        | INT          | Foreign Key → Users        |
-| Name          | NVARCHAR(200)| Medication name            |
-| Dosage        | NVARCHAR(100)| Dosage amount (e.g., "500mg") |
-| Frequency     | NVARCHAR(100)| Frequency (e.g., "2x daily") |
-| StartDate     | DATETIME     | Treatment start date       |
-| EndDate       | DATETIME     | Treatment end date (nullable) |
-| Notes         | NVARCHAR(MAX)| Optional notes            |
+**Users**
+- UserId, Username, Email, PasswordHash, TimeZoneId
+- EmailConfirmed, EmailVerificationToken
+- PasswordResetToken, ResetTokenExpiry
 
-### MedicationDoses Table
-| Column        | Type         | Description                |
-|---------------|--------------|----------------------------|
-| DoseId        | INT          | Primary Key                |
-| MedicationId  | INT          | Foreign Key → Medications  |
-| ScheduledTime | DATETIME     | When dose should be taken  |
-| TakenAt       | DATETIME     | When dose was actually taken (nullable) |
-| IsTaken       | BIT          | Boolean flag              |
+**UserMetrics**
+- UserId, DateOfBirth, HeightCm, WeightKg
+- BMI (calculated), CreatedAt, UpdatedAt
 
-### Vitals Table
-| Column                 | Type         | Description                |
-|------------------------|--------------|----------------------------|
-| VitalId                | INT          | Primary Key                |
-| UserId                 | INT          | Foreign Key → Users        |
-| RecordedAt             | DATETIME     | Measurement timestamp      |
-| BloodPressureSystolic  | INT          | Systolic BP (nullable)     |
-| BloodPressureDiastolic | INT          | Diastolic BP (nullable)    |
-| HeartRate              | INT          | BPM (nullable)             |
-| Weight                 | DECIMAL(5,2) | Weight in kg (nullable)    |
+**Medications**
+- MedicationId, UserId, Name, Dosage
+- Frequency, StartDate, EndDate, Notes
+- CreatedAt, UpdatedAt
+
+**MedicationLogs**
+- LogId, MedicationId, ScheduledTime
+- TakenAt, IsTaken, Status
+
+**Vitals**
+- VitalId, UserId, RecordedAt
+- BloodPressureSystolic, BloodPressureDiastolic
+- HeartRate, Weight
 
 ## API Endpoints
 
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login and receive JWT token
+### Authentication (`/api/auth`)
+- `POST /register` - Register new user
+- `POST /login` - Login and get JWT token
+- `POST /verify-email` - Verify email address
+- `POST /resend-verification` - Resend verification email
+- `POST /forgot-password` - Request password reset
+- `POST /validate-reset-token` - Validate reset token
+- `POST /reset-password` - Reset password
+- `PUT /update-profile` - Update user profile
 
-### Medications
-- `GET /api/medications` - Get all medications for authenticated user
-- `GET /api/medications/{id}` - Get specific medication
-- `POST /api/medications` - Create new medication
-- `PUT /api/medications/{id}` - Update medication
-- `DELETE /api/medications/{id}` - Delete medication
+### Medications (`/api/medications`)
+- `GET /` - Get all user medications
+- `GET /{id}` - Get specific medication
+- `POST /` - Create medication
+- `PUT /{id}` - Update medication
+- `DELETE /{id}` - Delete medication
 
-### Medication Doses
-- `GET /api/medications/{id}/doses` - Get dose schedule for medication
-- `PATCH /api/medications/doses/{id}/take` - Mark dose as taken
+### Medication Logs (`/api/medication-log`)
+- `GET /user/{userId}` - Get user's medication logs
+- `GET /today` - Get today's doses
+- `GET /medication/{medicationId}` - Get logs for medication
+- `POST /take/{logId}` - Mark dose as taken
+- `POST /skip/{logId}` - Skip dose
 
-### Vitals
-- `GET /api/vitals` - Get all vitals for authenticated user
-- `GET /api/vitals/{id}` - Get specific vital record
-- `POST /api/vitals` - Create new vital record
-- `PUT /api/vitals/{id}` - Update vital record
-- `DELETE /api/vitals/{id}` - Delete vital record
+### Vitals (`/api/vitals`)
+- `GET /` - Get all user vitals
+- `GET /{id}` - Get specific vital record
+- `POST /` - Create vital record
+- `PUT /{id}` - Update vital record
+- `DELETE /{id}` - Delete vital record
 
-### Prescription (Optional)
-- `POST /api/prescription/extract` - Upload PDF and extract medication data
+### User Metrics (`/api/user-metrics`)
+- `GET /setup-status` - Check if user completed setup
+- `POST /` - Save user metrics
+- `GET /` - Get user metrics
 
-## Future Improvements
+### Health (`/api/health`)
+- `GET /` - Health check endpoint
 
-- **Push Notifications**: Send reminders when medications are due
-- **Medication Interaction Warnings**: Check for drug interactions
-- **Mobile Version**: Native mobile app using Xamarin or React Native
-- **Doctor Appointment Scheduling**: Integrated calendar for medical appointments
-- **Report Generation**: Export health data as PDF reports
-- **Multiple Users**: Family account management
-- **Medication Refill Reminders**: Alert when running low on medications
-- **Integration with Pharmacies**: Order refills directly through the app
-- **Health Goals**: Set and track health objectives (weight loss, BP targets)
+### SignalR Hub (`/notificationHub`)
+- Real-time medication reminders
+- Missed dose notifications
+- Connection management
 
-## Contributing
+## Key Features Implementation
 
-This is a portfolio project. Feel free to fork and modify for your own use.
+### Real-time Notifications
+The application uses SignalR for real-time communication:
+- Background service checks for upcoming medications every minute
+- Notifications sent to connected clients via SignalR hub
+- Browser notifications for missed and upcoming doses
 
-## License
+### Email Verification Flow
+- User registers → verification email sent
+- Email contains unique token link
+- User clicks link → account verified
+- Can resend verification if needed
 
-MIT License - feel free to use this project for learning and portfolio purposes.
+### Password Reset Flow
+- User requests reset → reset email sent
+- Email contains token and link
+- User validates token → sets new password
+- Token expires after set time
+
+### Timezone Support
+- User timezone detected from browser
+- All times stored in UTC in database
+- Converted to user's timezone for display
+- Timezone mismatch dialog prompts updates
+
+
+## Technologies
+
+- [Angular](https://angular.io/)
+- [ASP.NET Core](https://dotnet.microsoft.com/apps/aspnet)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Chart.js](https://www.chartjs.org/)
+- [FullCalendar](https://fullcalendar.io/)
+- [SignalR](https://dotnet.microsoft.com/apps/aspnet/signalr)
+
+---
+
+**Built for better health management**
