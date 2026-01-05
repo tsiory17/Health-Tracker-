@@ -111,7 +111,7 @@ export class MedicationFormComponent implements OnInit {
           startDate.setHours(0, 0, 0, 0);
           endDate.setHours(0, 0, 0, 0);
           const diffTime = endDate.getTime() - startDate.getTime();
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Add 1 to include start date
           durationDays = diffDays.toString();
         }
 
@@ -148,7 +148,7 @@ export class MedicationFormComponent implements OnInit {
         const durationDays = parseInt(formValue.durationDays, 10);
         const [year, month, day] = formValue.startDate.split('-').map(Number);
         const startDateObj = new Date(year, month - 1, day); // Create local date at midnight
-        startDateObj.setDate(startDateObj.getDate() + durationDays); // Add duration days
+        startDateObj.setDate(startDateObj.getDate() + durationDays - 1); // Add duration days minus 1 (start date counts as day 1)
         endDate = formatDateToLocalISO(formatDateForInput(startDateObj));
       }
 
